@@ -1,14 +1,14 @@
 ---
 name: spec
 description: "Use when creating, reviewing, or implementing from specification documents. Unified spec-driven workflow via /spec create, /spec review {spec-id}, and /spec build {spec-id}. Treats the spec as single source of truth with SPEC-NNN traceability through TDD implementation."
-version: 2.1.0
+version: 2.2.0
 author: kz
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [spec, sdd, tdd, requirements, review, build]
-    related_skills: [tdd-workflow, verification-loop, blueprint, code-review]
+    related_skills: [tdd-workflow, verification-loop, blueprint, code-review, council]
 ---
 
 # Spec
@@ -182,29 +182,59 @@ After self-review passes:
 
 ## `/spec review <spec-id>`
 
-Structurally review a spec in 3 rounds. **Do not write code during review.**
+Structurally review a spec in 3 rounds via **isolated subagent(s)**. The parent agent orchestrates; it does **not** perform the review inline. **Do not write code during review.**
 
-### Step 0: Load spec
+### Step 0: Resolve and validate (parent)
 
 ```bash
 SPEC_FILE=$(find specs -maxdepth 1 -name "*${SPEC_ID}*.md" 2>/dev/null | head -1)
 ```
 
-Read the file with Read tool. If not found, list available specs and stop.
+If not found: list available specs and stop.
+
+Read the spec once to confirm it loads. Do not start Round 1 analysis in the parent — delegate all review work to subagent(s).
+
+### Step 1: Launch review subagent(s)
+
+Use the **Task** tool. Default: **one `generalPurpose` subagent** with `readonly: true` running the full 3-round review.
+
+For large specs (>300 lines) or high-stakes features, fan out **4 parallel subagents** (one per perspective A/B/C/D below) and synthesize Round 3 in the parent. Do not run inline review as a fallback unless subagent launch fails twice.
+
+**Task invocation (single reviewer — default):**
+
+```text
+Task(
+  description: "Spec review <spec-id>",
+  subagent_type: "generalPurpose",
+  readonly: true,
+  prompt: "<REVIEWER_PROMPT below>"
+)
+```
+
+**Task invocation (parallel — large/high-stakes only):**
+
+Launch 4 Tasks concurrently, each with the same prompt but a different `Perspective:` line (A, B, C, or D). Parent synthesizes Round 3 from all four outputs.
+
+#### REVIEWER_PROMPT
+
+Pass this exact shape to the subagent. Replace placeholders; do not include parent conversation history.
+
+```text
+You are an independent spec reviewer. You have no implementation context and no stake in approving the spec. Your job is to find problems.
+
+Spec file (read with Read tool):
+  <absolute path to SPEC_FILE>
+
+Spec ID: <spec-id>
+
+## Your workflow
 
 ### Round 1: Overall Understanding
+Read the spec. Grasp purpose, scope, target users, feature list, main flows, prerequisites, constraints, and document structure.
+Output a 1–3 sentence summary.
 
-Grasp:
-- Purpose, scope, target users
-- Feature list and main flows
-- Prerequisites and constraints
-- Document structure
-
-Summarize in 1–3 sentences before Round 2.
-
-### Round 2: Parallel Perspective Check
-
-Analyze all 4 perspectives simultaneously:
+### Round 2: Perspective Check
+Analyze from this lens (parallel mode: only your assigned perspective; single mode: all four):
 
 **A. Requirements Completeness**
 - Missing functional requirements (CRUD each defined?)
@@ -228,12 +258,18 @@ Analyze all 4 perspectives simultaneously:
 - Error handling and failure flows
 - Missing data / null / empty
 
-Also verify the **Spec Items** table: every testable requirement has a `SPEC-NNN` ID; vague items flagged.
+Also verify the Spec Items table: every testable requirement has a SPEC-NNN ID; flag vague or untestable items.
+
+Perspective (parallel mode only): <A|B|C|D>
 
 ### Round 3: Prioritized Output
 
-```
+Return exactly this structure:
+
 ## Review Results — <spec-id>
+
+### Round 1 Summary
+<1–3 sentences>
 
 ### 🔴 Critical (must fix before build)
 - [perspective] Issue → recommended fix
@@ -250,18 +286,34 @@ Also verify the **Spec Items** table: every testable requirement has a `SPEC-NNN
 
 ### Summary
 Overall quality assessment in 2–3 sentences.
-```
 
-**Priority criteria:**
+## Priority criteria
 - Critical: unimplementable, major security risk, missing business requirement
 - Major: ambiguity causing rework, missing important NFR
 - Minor: readability, maintainability, future extensibility
 
-### After review
+Be rigorous. Cite section names and exact phrases. Do not approve vague specs to be polite.
+```
 
-If Critical/Major findings exist: update the spec to address them, then re-run review or confirm fixes with user.
+### Step 2: Handle subagent failures (parent)
 
-When review passes (no open Critical):
+- If Task fails due to bad invocation (missing path, wrong type): fix and retry once immediately.
+- If subagent returns empty or malformed output: retry once with the same prompt.
+- If failure persists after retry: report the blocker to the user. Do not fall back to inline review unless user explicitly asks.
+
+### Step 3: Synthesize and present (parent)
+
+**Single subagent:** Present the subagent output as-is (minor formatting cleanup only).
+
+**Parallel subagents:** Merge findings into one Round 3 block. Deduplicate identical issues. Preserve all Critical/Major findings from any perspective.
+
+Present to user. Do not edit the spec during review — only report findings.
+
+### Step 4: After review (parent)
+
+If Critical/Major findings exist: offer to update the spec to address them, then re-run `/spec review <spec-id>` (spawns fresh subagent(s)).
+
+When review passes (no open 🔴 Critical):
 1. Update spec frontmatter: `reviewed: true`, `review_date: YYYY-MM-DD`, `status: reviewed`
 2. Suggest: `/spec build <spec-id>`
 
@@ -419,23 +471,25 @@ Verbal/ticket requests: "I'll update the spec first."
 
 ## Common Pitfalls
 
-1. **Skipping review before build.** Review catches ambiguities 10× cheaper than post-coding discovery. `/spec build` requires reviewed spec.
+1. **Inline review in parent.** `/spec review` must spawn subagent(s). Parent only resolves path, launches Task, synthesizes, updates frontmatter.
 
-2. **Retrofitting SPEC IDs after tests.** IDs must exist in spec before writing tests.
+2. **Skipping review before build.** Review catches ambiguities 10× cheaper than post-coding discovery. `/spec build` requires reviewed spec.
 
-3. **Vague spec language.** "Handle errors gracefully" is not a spec item until it says: `SPEC-007: API returns HTTP 422 with {error: string} when validation fails`.
+3. **Passing conversation history to reviewer.** Subagent gets spec path + REVIEWER_PROMPT only. No parent chat log — prevents implementation bias.
 
-4. **Implementing beyond the spec.** Add to spec or don't build it.
+4. **Retrofitting SPEC IDs after tests.** IDs must exist in spec before writing tests.
 
-5. **Letting spec drift from code.** Update spec whenever behavior changes.
+5. **Vague spec language.** "Handle errors gracefully" is not a spec item until it says: `SPEC-007: API returns HTTP 422 with {error: string} when validation fails`.
 
-6. **One giant spec.** Split per-feature/domain. Reference others: `See: 20260618-payments-api`.
+6. **Implementing beyond the spec.** Add to spec or don't build it.
 
-7. **Confusing spec items with tasks.** `SPEC-001: user can create payment` is a requirement. "Create Payment model" is a task for the implementation plan.
+7. **Letting spec drift from code.** Update spec whenever behavior changes.
 
-8. **Path inconsistency.** Always use flat `specs/YYYYMMDD-<slug>.md`. No subdirectories, no legacy `spec/` directory.
+8. **One giant spec.** Split per-feature/domain. Reference others: `See: 20260618-payments-api`.
 
----
+9. **Confusing spec items with tasks.** `SPEC-001: user can create payment` is a requirement. "Create Payment model" is a task for the implementation plan.
+
+10. **Path inconsistency.** Always use flat `specs/YYYYMMDD-<slug>.md`. No subdirectories, no legacy `spec/` directory.
 
 ## Verification Checklist
 

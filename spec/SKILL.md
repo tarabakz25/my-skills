@@ -1,7 +1,7 @@
 ---
 name: spec
 description: "Use when creating, reviewing, or implementing from specification documents. Unified spec-driven workflow via /spec create, /spec review {spec-id}, and /spec build {spec-id}. Treats the spec as single source of truth with SPEC-NNN traceability through TDD implementation."
-version: 2.0.0
+version: 2.1.0
 author: kz
 license: MIT
 platforms: [linux, macos, windows]
@@ -56,7 +56,7 @@ Always resolve before `review` or `build`:
 
 ```bash
 # From project root — returns first match or empty
-find specs/todo specs/inprogress specs/done -name "*${SPEC_ID}*.md" 2>/dev/null | head -1
+find specs -maxdepth 1 -name "*${SPEC_ID}*.md" 2>/dev/null | head -1
 ```
 
 If zero matches: report "spec not found" and list available specs.
@@ -65,11 +65,11 @@ If multiple matches: ask user to disambiguate with full date prefix.
 ### List available specs
 
 ```bash
-find specs/todo specs/inprogress specs/done -name '*.md' 2>/dev/null \
+find specs -maxdepth 1 -name '*.md' 2>/dev/null \
   | sort \
   | while read f; do
       basename "$f" .md
-      grep -m1 '^Status:' "$f" 2>/dev/null || echo "  (no Status field)"
+      grep -m1 '^status:' "$f" 2>/dev/null || echo "  (no status field)"
     done
 ```
 
@@ -134,19 +134,19 @@ Self-review checklist before saving:
 
 After self-review passes:
 
-1. Bootstrap directories if needed:
+1. Bootstrap directory if needed:
    ```bash
-   mkdir -p specs/todo specs/inprogress specs/done
+   mkdir -p specs
    ```
 
-2. Save to `specs/todo/YYYYMMDD-<slug>.md` (date = today, slug from command arg)
+2. Save to `specs/YYYYMMDD-<slug>.md` (date = today, slug from command arg)
 
 3. Include frontmatter:
    ```yaml
    ---
    title: <Spec Title>
    type: feature | api | system | data
-   status: todo
+   status: draft
    author: <from git config user.name or "unknown">
    created: <YYYY-MM-DD>
    reviewed: false
@@ -187,7 +187,7 @@ Structurally review a spec in 3 rounds. **Do not write code during review.**
 ### Step 0: Load spec
 
 ```bash
-SPEC_FILE=$(find specs/todo specs/inprogress specs/done -name "*${SPEC_ID}*.md" 2>/dev/null | head -1)
+SPEC_FILE=$(find specs -maxdepth 1 -name "*${SPEC_ID}*.md" 2>/dev/null | head -1)
 ```
 
 Read the file with Read tool. If not found, list available specs and stop.
@@ -262,9 +262,8 @@ Overall quality assessment in 2–3 sentences.
 If Critical/Major findings exist: update the spec to address them, then re-run review or confirm fixes with user.
 
 When review passes (no open Critical):
-1. Update spec frontmatter: `reviewed: true`, `review_date: YYYY-MM-DD`
-2. Keep file in `specs/todo/` until build starts
-3. Suggest: `/spec build <spec-id>`
+1. Update spec frontmatter: `reviewed: true`, `review_date: YYYY-MM-DD`, `status: reviewed`
+2. Suggest: `/spec build <spec-id>`
 
 ---
 
@@ -275,7 +274,7 @@ Implement from a reviewed spec. Requires spec to be reviewed (no open 🔴 Criti
 ### Step 0: Pre-flight
 
 ```bash
-SPEC_FILE=$(find specs/todo specs/inprogress specs/done -name "*${SPEC_ID}*.md" 2>/dev/null | head -1)
+SPEC_FILE=$(find specs -maxdepth 1 -name "*${SPEC_ID}*.md" 2>/dev/null | head -1)
 ```
 
 Verify:
@@ -283,12 +282,15 @@ Verify:
 - [ ] `reviewed: true` in frontmatter (or user explicitly waives review — document waiver)
 - [ ] Spec Items table present with P0/P1 items
 
-Move to inprogress if in todo:
+Update frontmatter to mark build start:
 
-```bash
-git mv specs/todo/YYYYMMDD-<slug>.md specs/inprogress/
-# Update frontmatter: status: inprogress
-git commit -m "spec: move <slug> to inprogress"
+```yaml
+status: inprogress
+```
+
+Commit the status change with implementation work or as a standalone commit:
+```
+git commit -m "spec: start build for <slug>"
 ```
 
 ### Step 1: Plan Derivation
@@ -335,7 +337,7 @@ Commit messages reference SPEC IDs: `feat: add payment validation [SPEC-042, SPE
 After P0/P1 implementation:
 
 ```bash
-SPEC_FILE="specs/inprogress/YYYYMMDD-<slug>.md"
+SPEC_FILE="specs/YYYYMMDD-<slug>.md"
 
 # SPEC IDs in spec
 grep -oE 'SPEC-[0-9]+' "$SPEC_FILE" | sort -u > /tmp/spec-ids.txt
@@ -353,11 +355,15 @@ If `/verification-loop` is available, run semantic compliance pass in addition t
 
 ### Step 4: Close spec
 
-After merge:
-```bash
-git mv specs/inprogress/YYYYMMDD-<slug>.md specs/done/
-# Update frontmatter: status: done
-git commit -m "spec: move <slug> to done"
+After merge, update frontmatter in place:
+
+```yaml
+status: done
+```
+
+Commit with implementation merge or standalone:
+```
+git commit -m "spec: mark <slug> done"
 ```
 
 ---
@@ -380,21 +386,25 @@ Examples: `20260617-payment-creation.md`, `20260618-payments-api.md`
 ```
 project-root/
   specs/
-    todo/          # Written, not yet implementing
-    inprogress/    # Actively implementing
-    done/          # Merged and verified
+    20260617-payment-creation.md
+    20260618-payments-api.md
 ```
 
-Never create subdirectories other than `todo/`, `inprogress/`, `done/`. Never put specs inside `src/` or `docs/`.
+All specs live flat under `specs/`. Never put specs inside `src/` or `docs/`. Do not create subdirectories under `specs/`.
 
-### Lifecycle transitions
+### Lifecycle (frontmatter only)
 
-Move files (not copy). Always standalone commit:
-```
-git commit -m "spec: move <slug> to inprogress"
-```
+Track state via `status:` in frontmatter — no file moves:
 
-Update `status:` in frontmatter to match directory.
+| status | Meaning |
+|--------|---------|
+| `draft` | Just created, not yet reviewed |
+| `reviewed` | Review passed, ready to build |
+| `inprogress` | Actively implementing |
+| `done` | Implemented and verified |
+| `revised` | Updated after initial review/build |
+
+Update `status:` when phase changes. Commit status updates with related work or standalone.
 
 ### Handling spec changes during build
 
@@ -423,15 +433,15 @@ Verbal/ticket requests: "I'll update the spec first."
 
 7. **Confusing spec items with tasks.** `SPEC-001: user can create payment` is a requirement. "Create Payment model" is a task for the implementation plan.
 
-8. **Path inconsistency.** Always use `specs/todo|inprogress|done/`, not legacy `spec/` directory.
+8. **Path inconsistency.** Always use flat `specs/YYYYMMDD-<slug>.md`. No subdirectories, no legacy `spec/` directory.
 
 ---
 
 ## Verification Checklist
 
 ### After `/spec create`
-- [ ] File at `specs/todo/YYYYMMDD-<slug>.md`
-- [ ] Frontmatter complete with `status: todo`, `reviewed: false`
+- [ ] File at `specs/YYYYMMDD-<slug>.md`
+- [ ] Frontmatter complete with `status: draft`, `reviewed: false`
 - [ ] Spec Items table with all testable requirements as SPEC-NNN
 - [ ] Self-review checklist passed
 
@@ -441,7 +451,7 @@ Verbal/ticket requests: "I'll update the spec first."
 - [ ] `reviewed: true` and `review_date` set in frontmatter
 
 ### After `/spec build`
-- [ ] Spec in `specs/inprogress/` during work, `specs/done/` after merge
+- [ ] Frontmatter `status: inprogress` during work, `status: done` after merge
 - [ ] Implementation plan maps every task to SPEC IDs
 - [ ] All tests include SPEC-NNN in name
 - [ ] Compliance grep: no unimplemented P0 IDs

@@ -1,5 +1,16 @@
 # Changelog
 
+## [project-init 1.0.0] - 2026-06-29
+
+### Added
+- `~/.skills/project-init/` — analyze a project codebase and generate missing `README.md` and/or `CLAUDE.md`
+- `scripts/detect_project.py` — manifest/stack/command recon helper
+- Output templates for README and CLAUDE structure
+- Root `~/.skills/README.md` and `~/.skills/CLAUDE.md` — generated via `/project-init` for the skills library itself
+
+### Removed
+- `~/.skills/skill-init/` — wrong scope (was for ~/.skills scaffolding, not project init)
+
 ## [repo] - 2026-06-29
 
 ### Added

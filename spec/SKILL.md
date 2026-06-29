@@ -1,7 +1,7 @@
 ---
 name: spec
 description: "Use when creating, reviewing, or implementing from specification documents. Unified spec-driven workflow via /spec create, /spec review {spec-id}, and /spec build {spec-id}. Treats the spec as single source of truth with SPEC-NNN traceability through TDD implementation."
-version: 2.2.0
+version: 2.3.0
 author: kz
 license: MIT
 platforms: [linux, macos, windows]
@@ -77,59 +77,138 @@ find specs -maxdepth 1 -name '*.md' 2>/dev/null \
 
 ## `/spec create <slug> [type]`
 
-Create a specification/design document in 3 phases. Goal: eliminate at write-time the gaps that review catches.
+Create a specification/design document in **5 phases**. Goal: right-sized specs that are feasible before draft is saved.
+
+**Hard gates — do not skip:**
+1. Phase 1.6 must resolve all blockers before Phase 2.
+2. Phase 2 includes **only** sections selected in Phase 1.5 — never dump the full template.
 
 ### Phase 1: Requirements Gathering
 
 Determine spec type from argument or infer from conversation. Only ask if unclear.
 
-| Type | Use Case | Template |
-|------|----------|----------|
+| Type | Use Case | Template (reference only) |
+|------|----------|---------------------------|
 | `feature` | Feature spec (UI/screens/flows) | references/feature-template.md |
 | `api` | REST/GraphQL API endpoint spec | references/api-template.md |
 | `system` | System design / architecture | references/system-template.md |
 | `data` | Data model / schema spec | references/data-template.md |
 
+Templates are **full catalogs**, not mandatory output. Section selection is in Phase 1.5 via [section-catalog.md](references/section-catalog.md).
+
 Gather **at minimum** (do not re-ask what's already in conversation, code, or CHANGELOG):
 
 **Common required items**
 1. Purpose / background
-2. Target users / usage scenarios
+2. Target users / usage scenarios (skip if obviously single-role internal tool)
 3. Scope (included / excluded)
 4. Related existing features / dependencies
 
 **Type-specific additional items**
-- `feature`: Main flow, screen transitions, inputs/outputs, states
+- `feature`: Main flow, screen transitions, inputs/outputs, states (only if applicable)
 - `api`: Endpoints, request/response, authentication, error responses
 - `system`: Component architecture, data flow, external system integration
 - `data`: Entities, attributes, relationships, constraints
 
-Ask everything in one batch. If user says "up to you", make reasonable assumptions and document them as `Assumption: ...`.
+Ask only **missing** items in one batch. If user says "up to you", make reasonable assumptions and document them as `Assumption: ...` — but still run Phase 1.6 for external/platform constraints.
+
+### Phase 1.5: Sizing & Section Selection
+
+Before drafting, classify complexity and pick sections. Read [section-catalog.md](references/section-catalog.md).
+
+| Tier | Typical scope | Spec size target |
+|------|---------------|------------------|
+| `minimal` | Single behavior, one endpoint, config toggle, ≤3 SPEC items | ~50–120 lines |
+| `standard` | Multi-step flow, several endpoints, 4–15 SPEC items | ~120–250 lines |
+| `full` | New subsystem, cross-cutting, compliance-critical, 15+ SPEC items | 250+ lines |
+
+**Workflow:**
+1. Infer tier from scope and SPEC item count estimate.
+2. Build a **Section Plan** table: section name → include / exclude + one-line reason.
+3. If tier is ambiguous, present plan to user: "This looks `minimal` — skip NFR and UI table. OK?"
+4. Record in spec frontmatter: `complexity: minimal | standard | full`
+
+**Rules:**
+- ✅ Always: Overview, functional requirements, acceptance criteria, Spec Items.
+- ⚠️ Conditional: include only when catalog criteria match (e.g., state transitions only for stateful entities).
+- ⬜ Omit: do **not** fill with "N/A" boilerplate — list in `## Excluded Sections` instead.
+- Never pad a `minimal` spec to look like `full`.
+
+### Phase 1.6: Feasibility & Clarification Gate
+
+**Stop and ask the user** before Phase 2 when any requirement depends on external/platform capability, unknown constraints, or conflicting goals.
+
+#### 1.6.1 Investigate before assuming
+
+For each requirement touching external systems, APIs, SDKs, or platform features:
+
+1. Read project code, config, README, existing specs.
+2. Check official docs (Context7, vendor docs, or web search) — not training-data memory alone.
+3. Classify each item:
+
+| Status | Meaning | Action |
+|--------|---------|--------|
+| ✅ Verified | Documented capability or already in codebase | Proceed |
+| ⚠️ Unverified | Docs unclear, version-dependent, or needs product decision | Ask user |
+| ❌ Blocked | Officially unsupported, impossible, or contradicts stated platform limits | Ask user; do not spec as-is |
+
+**Examples of ❌ Blocked:**
+- "Expose Cursor ACP max mode toggle" when official ACP API does not expose max mode → blocked until user picks an alternative (e.g., document manual UI step, file upstream feature request, or drop requirement).
+- "Real-time sync <50ms" on serverless cold-start with no infra budget → blocked until scope or infra is clarified.
+
+#### 1.6.2 Present Clarification Checklist
+
+Output this **before** drafting. Wait for user response on every ⚠️ and ❌ row.
+
+```markdown
+## Clarification Checklist — <slug>
+
+| # | Requirement | Status | Finding | Question / Alternatives |
+|---|-------------|--------|---------|-------------------------|
+| 1 | Max mode via Cursor ACP | ❌ Blocked | Not in official ACP API (checked: <source>) | Drop / workaround / out-of-scope? |
+| 2 | Target p95 latency | ⚠️ Unverified | No baseline in codebase | What p95 is acceptable? |
+
+**Cannot save draft until:** all ❌ resolved (drop, workaround, or explicit waive) and all ⚠️ answered or waived.
+```
+
+For ❌ items, always offer 2–3 concrete alternatives (drop, defer, workaround, scope change) — never silently rewrite the requirement.
+
+#### 1.6.3 Gate rules
+
+- **Do not** enter Phase 2 while any ❌ remains open.
+- **Do not** write requirements the user has not confirmed after a ❌/⚠️ finding.
+- User waiver: record in spec as `Assumption (user-waived): ...` or move to Out of scope.
+- If user says "spec it anyway" for a ❌ item: move requirement to **Out of scope** or **Future / blocked dependency** — never P0 Spec Items.
 
 ### Phase 2: Draft Generation
 
-Cover all aspects (aligned with review Round 2 checklist):
+Generate **only sections from Phase 1.5 Section Plan**. Apply quality rules to included sections:
 
-**A. Requirements Completeness** — user stories, CRUD explicitly, inputs/outputs/state transitions
+**A. Requirements Completeness** (included sections) — user stories if selected; CRUD only for affected resources; inputs/outputs/state transitions where relevant
 
-**B. Eliminate Contradictions and Ambiguity** — no "appropriately"/"as much as possible"; use numbers; consistent terminology + glossary
+**B. Eliminate Contradictions and Ambiguity** — no "appropriately"/"as much as possible"; use numbers; glossary only if selected
 
-**C. Non-Functional Requirements** — performance, security, availability, monitoring, scalability (mark N/A with reason; omission not allowed)
+**C. Non-Functional Requirements** — only selected NFR subsections; each documents target or `N/A — <reason>` inside that subsection
 
-**D. Edge Cases / Error States** — boundary values, concurrency, network failure, invalid input, auth failure
+**D. Edge Cases / Error States** — cover edges that change behavior; skip irrelevant categories (e.g., skip concurrency for read-only config)
 
-**E. Acceptance Criteria** — Given/When/Then format, testable granularity, happy + error paths
+**E. Acceptance Criteria** — Given/When/Then, testable, happy + error paths for in-scope behavior
+
+Add `## Excluded Sections` when any template section was omitted (see section-catalog).
 
 ### Phase 3: Self-Review, Spec Items, and Save
 
 Self-review checklist before saving:
 
 ```
-- [ ] A. Requirements completeness
+- [ ] Phase 1.6: no open ❌ blockers; ⚠️ items answered or waived
+- [ ] Phase 1.5: only planned sections present; Excluded Sections documented
+- [ ] A. Requirements completeness (for included sections)
 - [ ] B. Contradictions/ambiguity resolved
-- [ ] C. Non-functional requirements documented or N/A
-- [ ] D. Edge cases covered
+- [ ] C. NFR subsections included or omitted per plan (not blank placeholders)
+- [ ] D. Relevant edge cases covered
 - [ ] E. Acceptance criteria in GWT format
+- [ ] No P0 Spec Items for blocked/unverified platform capabilities
 ```
 
 After self-review passes:
@@ -146,6 +225,7 @@ After self-review passes:
    ---
    title: <Spec Title>
    type: feature | api | system | data
+   complexity: minimal | standard | full
    status: draft
    author: <from git config user.name or "unknown">
    created: <YYYY-MM-DD>
@@ -177,6 +257,8 @@ After self-review passes:
 - Specs document WHAT, not HOW — minimal code examples
 - Match user's conversation language
 - On update: set `status: revised`, append change history
+- **Right-size over completeness:** a 80-line `minimal` spec beats a 400-line spec with empty N/A sections
+- **Feasibility over optimism:** if official docs don't support a capability, surface it in Phase 1.6 — don't bury in Risks after save
 
 ---
 
@@ -258,6 +340,11 @@ Analyze from this lens (parallel mode: only your assigned perspective; single mo
 - Error handling and failure flows
 - Missing data / null / empty
 
+**E. Feasibility & Platform Constraints**
+- Requirements depending on external API/platform features — are they documented/supported?
+- P0 items that are technically impossible or unverified
+- Blocked items incorrectly left in scope vs moved to Out of scope / Future
+
 Also verify the Spec Items table: every testable requirement has a SPEC-NNN ID; flag vague or untestable items.
 
 Perspective (parallel mode only): <A|B|C|D>
@@ -288,9 +375,9 @@ Return exactly this structure:
 Overall quality assessment in 2–3 sentences.
 
 ## Priority criteria
-- Critical: unimplementable, major security risk, missing business requirement
-- Major: ambiguity causing rework, missing important NFR
-- Minor: readability, maintainability, future extensibility
+- Critical: unimplementable, unsupported platform/API capability in P0, major security risk, missing business requirement
+- Major: ambiguity causing rework, missing important NFR, unverified assumptions not flagged
+- Minor: readability, maintainability, future extensibility, over-sized spec with unnecessary sections
 
 Be rigorous. Cite section names and exact phrases. Do not approve vague specs to be polite.
 ```
@@ -491,15 +578,25 @@ Verbal/ticket requests: "I'll update the spec first."
 
 10. **Path inconsistency.** Always use flat `specs/YYYYMMDD-<slug>.md`. No subdirectories, no legacy `spec/` directory.
 
+11. **Fixed-size specs.** Dumping every template section regardless of scope bloats docs and hides signal. Use Phase 1.5 + section-catalog.
+
+12. **Specifying the impossible.** Writing P0 items for capabilities absent from official APIs (e.g., unsupported ACP options) wastes review/build cycles. Phase 1.6 gate first.
+
+13. **Silent assumption on platform limits.** "Should work" is not verification. Check docs/code; ask user when ❌/⚠️.
+
 ## Verification Checklist
 
 ### After `/spec create`
+- [ ] Phase 1.5 Section Plan applied; `complexity` in frontmatter
+- [ ] Phase 1.6 Clarification Checklist resolved (no open ❌)
 - [ ] File at `specs/YYYYMMDD-<slug>.md`
 - [ ] Frontmatter complete with `status: draft`, `reviewed: false`
 - [ ] Spec Items table with all testable requirements as SPEC-NNN
+- [ ] No P0 items for blocked platform capabilities
 - [ ] Self-review checklist passed
 
 ### After `/spec review`
+- [ ] Review delegated to subagent(s) via Task tool (`readonly: true`)
 - [ ] Review output with Critical/Major/Minor sections
 - [ ] No open 🔴 Critical findings
 - [ ] `reviewed: true` and `review_date` set in frontmatter
@@ -515,7 +612,8 @@ Verbal/ticket requests: "I'll update the spec first."
 
 ## Template Reference
 
-Detailed structures in `references/`:
+Full template structures (pick sections via catalog — do not copy wholesale):
+- [section-catalog.md](references/section-catalog.md) — **start here for sizing**
 - [feature-template.md](references/feature-template.md)
 - [api-template.md](references/api-template.md)
 - [system-template.md](references/system-template.md)

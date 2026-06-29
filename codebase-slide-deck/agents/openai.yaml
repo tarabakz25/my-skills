@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codebase Slide Deck"
+  short_description: "Create codebase-to-slide technical decks"
+  default_prompt: "Use $codebase-slide-deck to create a clear slide deck from this codebase."

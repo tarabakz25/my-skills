@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create PR From Branch Diff"
+  short_description: "Create a GitHub PR from current branch diff against base branch"
+  default_prompt: "Inspect branch diff, prepare title/body, open PR, and report URL with key changes and checks."

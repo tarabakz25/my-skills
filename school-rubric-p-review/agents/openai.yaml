@@ -1,0 +1,4 @@
+interface:
+  display_name: "学校課題ルーブリック評価"
+  short_description: "学校課題をルーブリック準拠でP評価と総評にまとめる"
+  default_prompt: "学校課題の提出物を、与えられたルーブリック（画像またはテキスト）で評価し、Pと総評を返す。"

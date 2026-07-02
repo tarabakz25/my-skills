@@ -4,7 +4,7 @@ A consolidated collection of agent skills for Claude, Cursor, and Codex — proc
 
 ## Overview
 
-This repository holds **~215 skills** under `~/.skills/`, merged from `~/.claude/skills/`, `~/.cursor/skills/`, and `~/.codex/skills/`. Each skill is a self-contained directory with a `SKILL.md` file that tells agents how to handle a specific task category (deployment, spec writing, code review, etc.).
+This repository holds **~33 skills** under `~/.skills/`, merged from `~/.claude/skills/`, `~/.cursor/skills/`, and `~/.codex/skills/`. Each skill is a self-contained directory with a `SKILL.md` file that tells agents how to handle a specific task category (deployment, spec writing, code review, etc.).
 
 Skills are not a runnable application. Agents load them on demand when a task matches the skill's trigger conditions.
 
@@ -22,7 +22,7 @@ Skills are not a runnable application. Agents load them on demand when a task ma
 
 - A compatible agent runtime (Claude Code, Cursor, Codex, etc.) configured to read from `~/.skills/`
 - For editing skills: any text editor
-- For skills with bundled tests (e.g. `skill-comply/`): Python 3.11+ and `pytest`
+- For skills with bundled tests: Python 3.11+ and `pytest`
 
 ### Install
 
@@ -36,13 +36,7 @@ python3 ~/.skills/project-init/scripts/detect_project.py .
 
 ### Per-Skill Tests
 
-Only individual skills define tests. Example for `skill-comply`:
-
-```bash
-cd skill-comply && pytest
-```
-
-There is no root-level test or build command.
+Only individual skills define tests; run them inside the skill directory that defines them. There is no root-level test or build command.
 
 ## Project Structure
 

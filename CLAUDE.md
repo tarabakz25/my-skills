@@ -2,7 +2,7 @@
 
 ## What This Is
 
-Consolidated agent skill library at `~/.skills/`. ~215 skills from Claude, Cursor, and Codex sources. Each skill is `<skill-name>/SKILL.md` — a Markdown workflow with YAML frontmatter that agents load when a task matches.
+Consolidated agent skill library at `~/.skills/`. ~33 skills from Claude, Cursor, and Codex sources. Each skill is `<skill-name>/SKILL.md` — a Markdown workflow with YAML frontmatter that agents load when a task matches.
 
 ## Tech Stack
 
@@ -18,12 +18,6 @@ Per-skill recon helper:
 
 ```bash
 python3 ~/.skills/project-init/scripts/detect_project.py .
-```
-
-Per-skill tests (only where present, e.g. `skill-comply/`):
-
-```bash
-cd skill-comply && pytest
 ```
 
 ## Project Structure
@@ -45,7 +39,7 @@ cd skill-comply && pytest
 ## Testing
 
 - No root test suite
-- Some skills bundle their own tests (e.g. `skill-comply/tests/` with pytest)
+- Some skills may bundle their own tests
 - Run tests only inside the skill directory that defines them
 
 ## Conventions

@@ -33,7 +33,6 @@ cd skill-comply && pytest
 - `skill-builder/` — authoring conventions (read before creating skills)
 - `project-init/` — generate README/CLAUDE for other repos
 - `spec/` — spec-driven dev (`/spec create|review|build`)
-- `CHANGELOG.md` — update when repo-level or skill changes ship
 
 ## Code Style
 
@@ -53,7 +52,6 @@ cd skill-comply && pytest
 
 - Source priority when merging duplicates: `.claude` > `.cursor` > `.codex`
 - Tags and `related_skills` in `metadata.hermes` are strongly recommended
-- Record meaningful changes in `CHANGELOG.md` at repo root
 
 ## Do Not Do
 

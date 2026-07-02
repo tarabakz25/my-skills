@@ -1,93 +1,157 @@
 ---
 name: ui-ux-designer
-description: >
-  UI/UXデザイナーとしてWebおよびモバイルアプリのフロントエンドデザインを設計・実装・レビューする。
-  Tailwind CSS + React/Next.js を主要技術スタックとし、デザインシステムの構築、
-  コンポーネント設計、アクセシビリティ対応、レスポンシブ実装を担う。
-  以下の場合に発動する:
-  (1) UIデザインの新規作成・設計を依頼された場合
-  (2) 既存UIのデザイン調整・改善を求められた場合
-  (3) デザインレビュー・フィードバックを求められた場合
-  (4) コンポーネント、画面レイアウト、デザインシステムの実装を任された場合
-  (5) アクセシビリティ、レスポンシブ、パフォーマンスの観点からUIを評価する場合
+description: "Use when designing, implementing, or reviewing web/mobile UI with Tailwind CSS + React/Next.js. Covers persona-driven IA, style guides, design tokens, component patterns, a11y (WCAG 2.1 AA), responsive layout, and self-review checklists."
+version: 2.1.0
+author: kz
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [ui, ux, design, tailwind, react, accessibility]
+    related_skills: [frontend-design, design-system, accessibility, browser-qa, design-tweaks-ui]
 ---
 
-# UI/UX Designer Skill
+# UI/UX Designer
 
-## 役割と行動原則
+## Overview
 
-このスキルはUI/UXデザイナーとして振る舞う。ユーザー視点と開発者視点を両立させ、
-**美しく・使いやすく・実装しやすい**UIを設計・実装・レビューする。
+Design, implement, and review frontend UI for web and mobile apps from **both user and developer perspectives**.
 
-UIデザインの基本原則（14ヶ条）に常に従う → [`references/ui-principles.md`](references/ui-principles.md)
+Uses Tailwind CSS + React/Next.js as the primary stack and defines a workflow from persona → sitemap → style guide → component implementation → self-review. Detailed principles, patterns, and checklists live in `references/`; SKILL.md focuses on decision criteria and procedures.
 
-**優先順位**:
-1. ユーザビリティ（操作性・分かりやすさ）
-2. アクセシビリティ（WCAG 2.1 AA準拠）
-3. デザイン一貫性（デザインシステム整合）
-4. レスポンシブ対応（mobile-first）
-5. パフォーマンス（再レンダリング最小化・CSS効率）
+**Core philosophy**: Beautiful, usable, and easy to implement. Function over decoration; reduce confusion over chasing novelty.
 
----
+**Priority order**:
+1. Usability (operability and clarity)
+2. Accessibility (WCAG 2.1 AA compliance)
+3. Design consistency (design system alignment)
+4. Responsive design (mobile-first)
+5. Performance (minimal re-renders, efficient CSS)
 
-## ワークフロー
+UI design fundamentals (14 principles) → [`references/ui-principles.md`](references/ui-principles.md)
 
-### 新規デザイン作成
+## When to Use
 
-1. **要件確認**: スクリーン用途・対象ユーザー・主要アクションを把握
-2. **ペルソナ作成（1〜2体）**: ユーザー属性・ゴール・ペインポイント・利用シーンを定義し、設計の判断軸にする → [`references/style-guide.md#ペルソナ定義テンプレート`](references/style-guide.md)
-3. **サイトマップ作成・調整**: Mermaid で画面構成とナビゲーション構造を可視化し、ペルソナのメインフローが3クリック以内か確認 → [`references/style-guide.md#サイトマップ-テンプレート`](references/style-guide.md)
-4. **スタイルガイド生成**: カラー・タイポグラフィ・コンポーネントスタイルをプロジェクト固有値で定義 → [`references/style-guide.md#スタイルガイド出力テンプレート`](references/style-guide.md)
-5. **情報設計**: コンテンツ優先度・レイアウト構造を決定（ペルソナ・サイトマップに基づく）
-6. **コンポーネント選定**: 既存パターンから適切なものを選ぶ → [`references/component-patterns.md`](references/component-patterns.md)
-7. **デザイントークン適用**: スタイルガイドで定義したトークンを使う → [`references/design-tokens.md`](references/design-tokens.md)
-8. **実装**: Tailwind + React でコーディング
-9. **セルフレビュー**: チェックリストで品質確認 → [`references/review-checklist.md`](references/review-checklist.md)
+**Use this skill when:**
+- Creating or designing new UI
+- Adjusting or improving existing UI
+- Adding a dev-only tweaks popup to compare design candidates via buttons → also use `design-tweaks-ui`
+- Requesting design review or feedback
+- Implementing components, screen layouts, or design systems
+- Evaluating UI for accessibility, responsiveness, or performance
 
-### デザイン調整
+**Don't use for:**
+- **Visual direction exploration only** (strong aesthetic is the main goal) → prefer `frontend-design`
+- **Full codebase design system audit or token generation** → prefer `design-system`
+- **Deep WCAG 2.2 a11y audit or ARIA specifications** → prefer `accessibility`
+- **E2E UI behavior verification** → prefer `browser-qa`
+- Backend API design or infrastructure (no UI involvement)
 
-1. 現状コードを読み、意図を把握してから変更する
-2. デザイントークンから外れた値（マジックナンバー）を使わない
-3. 1コンポーネントの変更が他に与える影響を確認する
+## Workflow
 
-### デザインレビュー
+### New Design Creation
 
-レビューチェックリストを参照し、観点ごとに指摘をリストアップする:
-- 重大（UX破綻・アクセシビリティ違反）→ 必ず修正
-- 警告（一貫性欠如・改善余地）→ 推奨修正
-- 提案（任意の改善）→ オプション
+1. **Requirements**: Understand screen purpose, target users, and primary actions
+2. **Personas (1–2)**: Define user attributes, goals, pain points, and usage context → [`references/style-guide.md`](references/style-guide.md)
+3. **Sitemap**: Visualize screen structure with Mermaid; confirm main flows are reachable within 3 clicks → [`references/style-guide.md#sitemap-template`](references/style-guide.md)
+4. **Style guide**: Define colors, typography, and component styles with project-specific values → [`references/style-guide.md#style-guide-output-template`](references/style-guide.md)
+5. **Information architecture**: Set content priority and layout structure (based on personas and sitemap)
+6. **Component selection**: Pick from existing patterns → [`references/component-patterns.md`](references/component-patterns.md)
+7. **Design tokens**: Apply style guide tokens; prefer existing project tokens when present → [`references/design-tokens.md`](references/design-tokens.md)
+8. **Implementation**: Code with Tailwind + React
+9. **Self-review**: Verify quality with the checklist → [`references/review-checklist.md`](references/review-checklist.md)
 
-詳細: [`references/review-checklist.md`](references/review-checklist.md)
+### Design Adjustments
 
----
+1. Read existing code and understand intent before changing anything
+2. Do not use values outside design tokens (magic numbers)
+3. Check impact of a single component change on other areas
+4. Re-verify critical items in [`references/review-checklist.md`](references/review-checklist.md) after adjustments
 
-## 技術スタック
+### Design Review
 
-**主要**: Tailwind CSS v3+, React 18+, Next.js App Router
-**補助**: shadcn/ui, Radix UI (アクセシブルプリミティブ), Framer Motion (アニメーション)
+Use [`references/review-checklist.md`](references/review-checklist.md) and list findings by category:
 
-### Tailwind使用ルール
+| Severity | Meaning | Action |
+|----------|---------|--------|
+| **Critical** | UX breakdown or accessibility violation | Must fix |
+| **Warning** | Consistency gaps or room for improvement | Recommended fix |
+| **Suggestion** | Optional improvement | Optional |
+
+See the output format at the end of the same file.
+
+## Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| Primary | Tailwind CSS v3+, React 18+, Next.js App Router |
+| Supporting | shadcn/ui, Radix UI, Framer Motion |
+
+### Tailwind Rules
 
 ```tsx
-// Good: デザイントークンに沿ったクラス
+// Good: classes aligned with design tokens
 <button className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
 
-// Bad: マジックナンバー・任意値の多用
+// Bad: magic numbers and arbitrary values
 <button className="bg-[#1a73e8] text-[13px] px-[14px]">
 ```
 
-- 任意値 `[]` は既存トークンで対応不可能な場合のみ使う
-- `@apply` は共通パターンが3回以上繰り返される場合に検討
-- Dark mode: `dark:` バリアントをセマンティックカラーに組み合わせる
+- Use arbitrary values `[]` only when existing tokens cannot cover the need
+- Consider `@apply` when the same pattern repeats 3+ times
+- Dark mode: combine `dark:` variants with semantic colors
 
----
+## References
 
-## リファレンス
+| File | Content | When to Read |
+|------|---------|--------------|
+| [`references/ui-principles.md`](references/ui-principles.md) | 14 UI design principles + review questions | Design decisions and reviews |
+| [`references/style-guide.md`](references/style-guide.md) | Persona, sitemap, and style guide templates | Early phase of new work |
+| [`references/design-tokens.md`](references/design-tokens.md) | Default color, type, spacing system | Implementation start, token checks |
+| [`references/component-patterns.md`](references/component-patterns.md) | Button/Form/Card/Nav implementation patterns | Component selection and coding |
+| [`references/review-checklist.md`](references/review-checklist.md) | a11y, responsive, design system, performance | Reviews and post-implementation |
 
-| ファイル | 内容 | 参照タイミング |
-|---------|------|--------------|
-| [`references/ui-principles.md`](references/ui-principles.md) | UIデザイン基本原則14ヶ条 + 確認問い | 設計判断・レビュー時 |
-| [`references/style-guide.md`](references/style-guide.md) | ペルソナ定義・サイトマップ・スタイルガイドテンプレート | 新規作成の初期フェーズ |
-| [`references/design-tokens.md`](references/design-tokens.md) | カラー・タイポ・スペーシング等のデフォルトシステム | 実装開始時・トークン確認時 |
-| [`references/component-patterns.md`](references/component-patterns.md) | Button/Form/Card/Nav等の実装パターン | コンポーネント選定・実装時 |
-| [`references/review-checklist.md`](references/review-checklist.md) | a11y・レスポンシブ・デザインシステム・パフォーマンスチェック | レビュー時・実装完了後 |
+## Common Pitfalls
+
+1. **Skipping personas and sitemap before coding** — IA breaks later. Do not skip steps 2–4 on new work.
+
+2. **Confusing this skill with frontend-design** — This skill focuses on UX principles, tokens, and a11y alignment. Use `frontend-design` when a strong aesthetic direction is needed.
+
+3. **Tailwind arbitrary values as magic numbers** — `text-[13px]` or `bg-[#333]` break the design system. Use tokens or scales from `design-tokens.md`.
+
+4. **Building buttons with `div` + `onClick`** — Fails keyboard and screen reader support. Use `<button>` or Radix primitives from [`references/component-patterns.md`](references/component-patterns.md).
+
+5. **Returning only "suggestions" in reviews** — List critical and warning items first with file paths and concrete fixes. Follow the output format in [`references/review-checklist.md`](references/review-checklist.md).
+
+6. **Ignoring existing project tokens** — `design-tokens.md` is the default. Prefer `tailwind.config` or CSS variables in the repo when they exist.
+
+7. **Forgetting mobile-first** — Desktop-first layouts with only `max-w-*` break at 375px. Apply `sm:` `md:` `lg:` from small to large.
+
+## Verification Checklist
+
+After implementation or review:
+
+- [ ] Persona main flow is achievable within 3 clicks (new work)
+- [ ] No arbitrary values outside design tokens remain
+- [ ] All **Critical** items in [`references/review-checklist.md`](references/review-checklist.md) pass
+- [ ] No horizontal scroll at 375px width
+- [ ] Interactive elements have hover / focus / disabled states
+- [ ] Form errors, loading, and destructive actions have appropriate feedback
+- [ ] Changed components have no unintended side effects elsewhere
+
+### Frontmatter Validation (on skill updates)
+
+```bash
+python3 -c "
+import yaml, re, pathlib
+p = pathlib.Path('~/.skills/ui-ux-designer/SKILL.md').expanduser()
+content = p.read_text()
+assert content.startswith('---'), 'Must start with ---'
+m = re.search(r'\n---\s*\n', content[3:])
+fm = yaml.safe_load(content[3:m.start()+3])
+assert fm['name'] == 'ui-ux-designer'
+assert len(fm['description']) <= 1024
+assert len(content) <= 100_000
+print('OK:', fm['version'])
+"
+```

@@ -15,7 +15,6 @@ Skills are not a runnable application. Agents load them on demand when a task ma
 | Skill format | Markdown + YAML frontmatter |
 | Optional scripts | Python, shell (per-skill) |
 | System skills | `.system/` (Codex preinstalled skills) |
-| Change log | `CHANGELOG.md` at repo root |
 
 ## Getting Started
 
@@ -49,7 +48,6 @@ There is no root-level test or build command.
 
 ```
 ~/.skills/
-├── CHANGELOG.md           # Repo-level change history
 ├── project-init/          # Generate README.md / CLAUDE.md for other projects
 ├── skill-builder/         # Meta-skill: how to author skills
 ├── spec/                  # Spec-driven development workflow

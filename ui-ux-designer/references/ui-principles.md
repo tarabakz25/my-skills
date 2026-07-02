@@ -1,104 +1,104 @@
-# UIデザイン基本原則 14ヶ条
+# 14 UI Design Principles
 
-出典: https://www.uxpin.com/studio/jp/blog-jp/ui-design-principles-ja/
-
----
-
-## 1. ユーザーを中心に据える
-
-ユーザーは誰か（専門家か一般ユーザーか）を明確にし、そのニーズ・ゴール・メンタルモデルに合わせてデザインする。
-ユーザーの「やりたいこと」を最短で達成させることがすべての出発点。
-
-## 2. 明瞭さを追求する
-
-ラベル・アイコン・ナビゲーション・フィードバックは、見た瞬間に意味が分かること。
-迷わせるインターフェースは失敗。説明なしで操作できることを目指す。
-
-## 3. 画面ごとのアクションとステップを最小化する
-
-各画面に主要フォーカスは1つ。不要なステップ・フィールド・クリック数を削減する。
-「このUIがなくても達成できないか？」を常に問う。
-
-## 4. シンプルさを目指す
-
-装飾より機能。不要な要素は削除する。
-シンプルで洗練されたUIはユーザーに信頼感と高級感を与える。
-
-## 5. 一貫性を保つ
-
-同じ操作・同じ概念には、同じ見た目・同じ挙動を与える。
-一貫性が「馴染み」を生み、学習コストを下げる。デザインシステムはこの原則を実現するツール。
-
-## 6. UIデザインは見えなくていい
-
-優れたUIは、ユーザーに「これどうやって使うんだろう」と思わせない。
-摩擦ゼロで目的を達成させるのが理想。UIの存在を意識させないデザインを目指す。
-
-## 7. 有益なフィードバックを提供する
-
-ユーザーのアクションに対して、視覚・音声・触覚いずれかのフィードバックを返す。
-- ボタン押下 → 視覚的な押下状態
-- 保存完了 → トースト通知
-- エラー → インラインエラーメッセージ
-
-アクションの結果が分からない状態はNG。
-
-## 8. 認知的負荷を軽減する
-
-ユーザーに「考えさせない」設計。
-- 情報をチャンク化する（関連情報をグループ化）
-- 記憶させずに認識させる（例: アイコン + ラベルの併記）
-- 3クリックルール（重要な情報・機能には3クリック以内でアクセスできる）
-
-## 9. アクセスしやすくする
-
-視覚障害・色覚障害・運動障害のあるユーザーにも対応する。
-WCAG 2.1 AA を最低基準とし、以下を実践:
-- コントラスト比の確保
-- キーボードのみでの操作
-- スクリーンリーダー対応（ARIAラベル・セマンティックHTML）
-
-## 10. UIにユーザーのフィードバックを含める
-
-デザインプロセスで実際のユーザーからフィードバックを収集する。
-リリース後も継続的にデータ（クリック率・離脱率・ユーザーインタビュー）を取り、改善する。
-
-## 11. 柔軟性
-
-複数のデバイス・OS・画面サイズで正しく動作すること。
-Responsive design は必須。また、初心者向けと上級者向けの両方のパスを用意できると理想的。
-
-## 12. 視覚的構造
-
-視覚的階層・配色・グリッドを使い、情報に秩序を与える。
-- 重要な情報は大きく・強調する
-- ホワイトスペースで呼吸感を持たせる
-- 一貫したナビゲーション位置でユーザーを迷わせない
-
-## 13. ダイアログは終了につながるべきである
-
-ユーザーの操作フローには「始まり・中間・終わり」がある。
-各ステップで進捗とフィードバックを示し、ユーザーが「今どこにいるか」「次に何をすべきか」を常に把握できるようにする。
-
-## 14. 明確な次のステップを提示する
-
-インタラクション完了後、ユーザーが取れる次のアクションを明示する。
-例: 購入完了後 → 「注文を確認する」「買い物を続ける」ボタンを表示。
-ユーザーを迷子にしない。
+Source: https://www.uxpin.com/studio/jp/blog-jp/ui-design-principles-ja/
 
 ---
 
-## デザイン時のチェック観点
+## 1. Put Users at the Center
 
-| 原則 | 確認問い |
-|------|---------|
-| ユーザー中心 | このUIは誰のためにある？そのユーザーのゴールを最短で達成できるか？ |
-| 明瞭さ | ラベル・アイコンは説明なしで理解できるか？ |
-| ステップ最小化 | この画面の主要アクションは1つか？不要なフィールド・ステップはないか？ |
-| シンプルさ | 削除できる要素はないか？ |
-| 一貫性 | 同じパターンを同じ方法で表現しているか？ |
-| フィードバック | すべてのアクションに対して適切なフィードバックがあるか？ |
-| 認知負荷 | ユーザーに記憶させている情報はないか？ |
-| アクセシビリティ | キーボードのみで操作できるか？コントラストは十分か？ |
-| 視覚的構造 | 情報の重要度が視覚的に伝わるか？ |
-| 次のステップ | アクション後にユーザーが迷子にならないか？ |
+Clarify who the user is (expert vs. general user) and design for their needs, goals, and mental models.
+The starting point is helping users achieve what they want to do as quickly as possible.
+
+## 2. Pursue Clarity
+
+Labels, icons, navigation, and feedback should be understandable at a glance.
+Confusing interfaces fail. Aim for operation without explanation.
+
+## 3. Minimize Actions and Steps per Screen
+
+Each screen should have one primary focus. Remove unnecessary steps, fields, and clicks.
+Always ask: "Can this goal be achieved without this UI?"
+
+## 4. Aim for Simplicity
+
+Function over decoration. Remove unnecessary elements.
+Simple, refined UI builds trust and perceived quality.
+
+## 5. Maintain Consistency
+
+Same operations and concepts should look and behave the same way.
+Consistency creates familiarity and lowers learning cost. Design systems exist to enforce this.
+
+## 6. UI Design Should Be Invisible
+
+Great UI does not make users wonder how to use it.
+The ideal is zero friction to the goal. Design so users forget the UI exists.
+
+## 7. Provide Useful Feedback
+
+Every user action should receive visual, auditory, or haptic feedback:
+- Button press → visible pressed state
+- Save complete → toast notification
+- Error → inline error message
+
+Never leave users unsure whether an action succeeded.
+
+## 8. Reduce Cognitive Load
+
+Design so users do not have to think hard:
+- Chunk information (group related content)
+- Prefer recognition over recall (e.g., icon + label together)
+- Three-click rule (important info and features reachable within 3 clicks)
+
+## 9. Make It Accessible
+
+Support users with visual, color vision, and motor impairments.
+Use WCAG 2.1 AA as the minimum baseline:
+- Sufficient contrast ratios
+- Full keyboard operation
+- Screen reader support (ARIA labels, semantic HTML)
+
+## 10. Include User Feedback in the UI Process
+
+Collect feedback from real users during design.
+After launch, keep improving with data (click rates, drop-off, interviews).
+
+## 11. Flexibility
+
+Work correctly across devices, OSes, and screen sizes.
+Responsive design is required. Ideally, support both beginner and power-user paths.
+
+## 12. Visual Structure
+
+Use visual hierarchy, color, and grids to give information order:
+- Emphasize important information with size and weight
+- Use whitespace for breathing room
+- Keep navigation in consistent locations so users do not get lost
+
+## 13. Dialogs Should Lead to Completion
+
+User flows have a beginning, middle, and end.
+Show progress and feedback at each step so users always know where they are and what to do next.
+
+## 14. Present Clear Next Steps
+
+After an interaction completes, show what the user can do next.
+Example: after purchase → show "View order" and "Continue shopping" buttons.
+Do not leave users stranded.
+
+---
+
+## Design Review Questions
+
+| Principle | Review Question |
+|-----------|-----------------|
+| User-centered | Who is this UI for? Can they reach their goal as quickly as possible? |
+| Clarity | Can labels and icons be understood without explanation? |
+| Step minimization | Does this screen have one primary action? Any unnecessary fields or steps? |
+| Simplicity | Can anything be removed? |
+| Consistency | Are the same patterns expressed the same way? |
+| Feedback | Does every action have appropriate feedback? |
+| Cognitive load | Are users being asked to remember information they should not need to? |
+| Accessibility | Is keyboard-only operation possible? Is contrast sufficient? |
+| Visual structure | Does visual hierarchy communicate importance? |
+| Next steps | Will users know what to do after an action completes? |

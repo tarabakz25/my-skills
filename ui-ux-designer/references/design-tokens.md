@@ -1,13 +1,13 @@
-# デフォルト デザイントークン
+# Default Design Tokens
 
-Tailwind CSS v3 ベースのデフォルトデザインシステム。
-プロジェクト固有のトークンがある場合はそちらを優先する。
+Default design system based on Tailwind CSS v3.
+Prefer project-specific tokens when they already exist.
 
 ---
 
-## カラーシステム
+## Color System
 
-### セマンティックカラー（`tailwind.config.js` で定義推奨）
+### Semantic Colors (recommended in `tailwind.config.js`)
 
 ```js
 // tailwind.config.js
@@ -21,44 +21,44 @@ colors: {
 }
 ```
 
-### 用途マッピング
+### Usage Mapping
 
-| 用途 | Light | Dark |
-|------|-------|------|
-| ページ背景 | `bg-white` / `bg-neutral-50` | `dark:bg-neutral-900` |
-| カード背景 | `bg-white` | `dark:bg-neutral-800` |
-| プライマリテキスト | `text-neutral-900` | `dark:text-neutral-50` |
-| セカンダリテキスト | `text-neutral-600` | `dark:text-neutral-400` |
-| ボーダー | `border-neutral-200` | `dark:border-neutral-700` |
-| CTA（主要アクション）| `bg-primary-600` | `dark:bg-primary-500` |
+| Usage | Light | Dark |
+|-------|-------|------|
+| Page background | `bg-white` / `bg-neutral-50` | `dark:bg-neutral-900` |
+| Card background | `bg-white` | `dark:bg-neutral-800` |
+| Primary text | `text-neutral-900` | `dark:text-neutral-50` |
+| Secondary text | `text-neutral-600` | `dark:text-neutral-400` |
+| Border | `border-neutral-200` | `dark:border-neutral-700` |
+| CTA (primary action) | `bg-primary-600` | `dark:bg-primary-500` |
 
 ---
 
-## タイポグラフィ
+## Typography
 
-### フォントスケール
+### Font Scale
 
 ```
-text-xs    → 12px / lh 1.5  → ラベル、キャプション
-text-sm    → 14px / lh 1.5  → 補助テキスト、フォームヒント
-text-base  → 16px / lh 1.75 → 本文（基準）
-text-lg    → 18px / lh 1.75 → リードテキスト
-text-xl    → 20px / lh 1.5  → セクション見出し
+text-xs    → 12px / lh 1.5  → labels, captions
+text-sm    → 14px / lh 1.5  → supporting text, form hints
+text-base  → 16px / lh 1.75 → body (baseline)
+text-lg    → 18px / lh 1.75 → lead text
+text-xl    → 20px / lh 1.5  → section headings
 text-2xl   → 24px / lh 1.25 → H3
 text-3xl   → 30px / lh 1.25 → H2
-text-4xl   → 36px / lh 1.1  → H1（ページタイトル）
+text-4xl   → 36px / lh 1.1  → H1 (page title)
 ```
 
-### フォントウェイト
+### Font Weights
 
 ```
-font-normal   (400) → 本文
-font-medium   (500) → UIラベル、ボタン
-font-semibold (600) → 見出し、強調
-font-bold     (700) → 大見出し
+font-normal   (400) → body
+font-medium   (500) → UI labels, buttons
+font-semibold (600) → headings, emphasis
+font-bold     (700) → large headings
 ```
 
-### 推奨フォントスタック
+### Recommended Font Stack
 
 ```js
 fontFamily: {
@@ -69,74 +69,74 @@ fontFamily: {
 
 ---
 
-## スペーシング
+## Spacing
 
-Tailwind デフォルトスケール（4px基数）に準拠。
+Follows Tailwind default scale (4px base).
 
-| Token | px | 用途 |
-|-------|-----|------|
-| `p-1` | 4px | アイコンパディング等の微調整 |
-| `p-2` | 8px | コンパクトなUI要素 |
-| `p-3` | 12px | 小〜中ボタン、インプット |
-| `p-4` | 16px | カード内パディング（標準） |
-| `p-6` | 24px | セクション内パディング |
-| `p-8` | 32px | ページセクション |
-| `gap-4` | 16px | リスト・グリッドの標準ギャップ |
-| `gap-6` | 24px | カードグリッドのギャップ |
-
----
-
-## ボーダーとシャドウ
-
-```
-rounded-sm   → 2px   小アイコン・タグ
-rounded      → 4px   インプット、セレクト
-rounded-md   → 6px   ボタン（標準）
-rounded-lg   → 8px   カード
-rounded-xl   → 12px  モーダル
-rounded-2xl  → 16px  大きなカード
-rounded-full → 9999px ピル、アバター
-
-shadow-sm  → 微妙な影（カード）
-shadow     → 標準的な影（ドロップダウン）
-shadow-md  → 浮き上がり感（ポップアップ）
-shadow-lg  → モーダル、ダイアログ
-```
+| Token | px | Usage |
+|-------|-----|-------|
+| `p-1` | 4px | Fine adjustments, icon padding |
+| `p-2` | 8px | Compact UI elements |
+| `p-3` | 12px | Small to medium buttons, inputs |
+| `p-4` | 16px | Standard card padding |
+| `p-6` | 24px | Section padding |
+| `p-8` | 32px | Page sections |
+| `gap-4` | 16px | Standard list/grid gap |
+| `gap-6` | 24px | Card grid gap |
 
 ---
 
-## ブレークポイント（Responsive）
-
-Mobile-first で設計する。
+## Borders and Shadows
 
 ```
-sm:  640px  → スマートフォン横持ち
-md:  768px  → タブレット縦
-lg:  1024px → タブレット横 / 小デスクトップ
-xl:  1280px → デスクトップ
-2xl: 1536px → 大画面
-```
+rounded-sm   → 2px   small icons, tags
+rounded      → 4px   inputs, selects
+rounded-md   → 6px   buttons (standard)
+rounded-lg   → 8px   cards
+rounded-xl   → 12px  modals
+rounded-2xl  → 16px  large cards
+rounded-full → 9999px pills, avatars
 
-**コンテナ幅**:
-```
-max-w-sm   → 384px  狭いフォーム
-max-w-md   → 448px  モーダル
-max-w-lg   → 512px  コンテンツカラム
-max-w-2xl  → 672px  記事・ドキュメント
-max-w-4xl  → 896px  ダッシュボード
-max-w-7xl  → 1280px ページコンテナ
+shadow-sm  → subtle shadow (cards)
+shadow     → standard shadow (dropdowns)
+shadow-md  → elevated feel (popovers)
+shadow-lg  → modals, dialogs
 ```
 
 ---
 
-## アニメーション
+## Breakpoints (Responsive)
+
+Design mobile-first.
 
 ```
-transition-colors   duration-150 → ホバー・フォーカスのカラー変化
-transition-opacity  duration-200 → フェードイン/アウト
-transition-all      duration-200 → 汎用（多用しない）
-animate-spin        → ローディングスピナー
-animate-pulse       → スケルトンローディング
+sm:  640px  → landscape phone
+md:  768px  → portrait tablet
+lg:  1024px → landscape tablet / small desktop
+xl:  1280px → desktop
+2xl: 1536px → large screen
 ```
 
-標準イージング: `ease-in-out`（Tailwind デフォルト）
+**Container widths**:
+```
+max-w-sm   → 384px  narrow forms
+max-w-md   → 448px  modals
+max-w-lg   → 512px  content columns
+max-w-2xl  → 672px  articles, docs
+max-w-4xl  → 896px  dashboards
+max-w-7xl  → 1280px page containers
+```
+
+---
+
+## Animation
+
+```
+transition-colors   duration-150 → hover/focus color changes
+transition-opacity  duration-200 → fade in/out
+transition-all      duration-200 → general use (do not overuse)
+animate-spin        → loading spinner
+animate-pulse       → skeleton loading
+```
+
+Default easing: `ease-in-out` (Tailwind default)

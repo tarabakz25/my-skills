@@ -1,111 +1,111 @@
-# スタイルガイド生成テンプレート
+# Style Guide Generation Templates
 
-デザイン初期フェーズで生成するスタイルガイド。
-`references/design-tokens.md` のデフォルトトークンをベースに、プロジェクト固有の値を上書きして使う。
-
----
-
-## ペルソナ定義テンプレート（1〜2体）
-
-各プロジェクトで1〜2体のペルソナを定義する。1体はメインユーザー、2体目は副次ユーザー（存在する場合）。
-
-```markdown
-## ペルソナ A: [名前]（メインユーザー）
-
-| 項目 | 内容 |
-|------|------|
-| 年齢・属性 | 例: 28歳、都市部在住のビジネスパーソン |
-| 職業・役割 | 例: スタートアップのプロダクトマネージャー |
-| 技術リテラシー | 高 / 中 / 低 |
-| 主な利用デバイス | モバイル優先 / デスクトップ優先 / 両方 |
-| ゴール | このプロダクトで達成したいこと（1〜3つ） |
-| ペインポイント | 現状の課題・不満（1〜3つ） |
-| 利用シーン | いつ・どこで・どのように使うか |
-| 重視すること | スピード / 安全性 / わかりやすさ / デザイン 等 |
-
-### このペルソナへの設計指針
-- UI原則14ヶ条の中で特に優先すべき原則を明記
-- 例: 「認知的負荷を軽減（原則8）」「明確な次のステップ（原則14）」
-```
-
-```markdown
-## ペルソナ B: [名前]（副次ユーザー）※必要な場合のみ
-
-（同フォーマット）
-```
+Style guides produced in the early design phase.
+Base them on default tokens from `references/design-tokens.md` and override with project-specific values.
 
 ---
 
-## サイトマップ テンプレート
+## Persona Definition Template (1–2 personas)
 
-情報設計フェーズでサイトマップをMermaidで生成・調整する。
+Define 1–2 personas per project. One is the primary user; the second is a secondary user when needed.
+
+```markdown
+## Persona A: [Name] (Primary User)
+
+| Field | Content |
+|-------|---------|
+| Age / Profile | e.g., 28, urban business professional |
+| Role | e.g., startup product manager |
+| Tech literacy | High / Medium / Low |
+| Primary device | Mobile-first / Desktop-first / Both |
+| Goals | What they want to achieve with this product (1–3 items) |
+| Pain points | Current frustrations or blockers (1–3 items) |
+| Usage context | When, where, and how they use it |
+| Priorities | Speed / Safety / Clarity / Design, etc. |
+
+### Design Guidelines for This Persona
+- Note which of the 14 UI principles to prioritize
+- e.g., "Reduce cognitive load (Principle 8)", "Present clear next steps (Principle 14)"
+```
+
+```markdown
+## Persona B: [Name] (Secondary User) — only when needed
+
+(Same format)
+```
+
+---
+
+## Sitemap Template
+
+Generate and refine the sitemap with Mermaid during information architecture.
 
 ```mermaid
 graph TD
-  ROOT["/ (ルート)"]
-  ROOT --> AUTH["認証系"]
-  ROOT --> APP["アプリ本体"]
-  ROOT --> ACCOUNT["アカウント管理"]
+  ROOT["/ (root)"]
+  ROOT --> AUTH["Authentication"]
+  ROOT --> APP["App"]
+  ROOT --> ACCOUNT["Account"]
 
-  AUTH --> LOGIN["/login ログイン"]
-  AUTH --> SIGNUP["/signup 新規登録"]
-  AUTH --> RESET["/reset-password パスワードリセット"]
+  AUTH --> LOGIN["/login Sign in"]
+  AUTH --> SIGNUP["/signup Sign up"]
+  AUTH --> RESET["/reset-password Reset password"]
 
-  APP --> DASHBOARD["/dashboard ダッシュボード"]
-  APP --> LIST["/items 一覧"]
-  APP --> DETAIL["/items/:id 詳細"]
-  APP --> CREATE["/items/new 作成"]
+  APP --> DASHBOARD["/dashboard Dashboard"]
+  APP --> LIST["/items List"]
+  APP --> DETAIL["/items/:id Detail"]
+  APP --> CREATE["/items/new Create"]
 
-  ACCOUNT --> PROFILE["/settings/profile プロフィール"]
-  ACCOUNT --> BILLING["/settings/billing 支払い"]
-  ACCOUNT --> NOTIFY["/settings/notifications 通知"]
+  ACCOUNT --> PROFILE["/settings/profile Profile"]
+  ACCOUNT --> BILLING["/settings/billing Billing"]
+  ACCOUNT --> NOTIFY["/settings/notifications Notifications"]
 ```
 
-### サイトマップ調整チェック
+### Sitemap Review Checklist
 
-- [ ] ユーザーのゴールまでのクリック数は最小か（原則3）
-- [ ] ナビゲーション構造が一貫しているか（原則5）
-- [ ] 各ページの役割が1つに絞られているか（原則3）
-- [ ] ペルソナのメインフローが3クリック以内で達成できるか（原則8）
+- [ ] Clicks to user goals are minimized (Principle 3)
+- [ ] Navigation structure is consistent (Principle 5)
+- [ ] Each page has a single clear role (Principle 3)
+- [ ] Persona main flows are reachable within 3 clicks (Principle 8)
 
 ---
 
-## スタイルガイド出力テンプレート
+## Style Guide Output Template
 
-プロジェクト固有の値を記入してスタイルガイドを生成する。
+Fill in project-specific values to generate the style guide.
 
-### カラーパレット
+### Color Palette
 
 ```markdown
 ## Colors
 
 ### Brand Colors
-| Name       | Hex       | Tailwind Class        | 用途 |
-|------------|-----------|----------------------|------|
-| Primary    | #2563EB   | bg-primary-600       | CTA、主要アクション |
-| Primary Lt | #EFF6FF   | bg-primary-50        | ホバー背景、ハイライト |
-| Secondary  | #475569   | bg-secondary-600     | 補助アクション |
+| Name       | Hex       | Tailwind Class        | Usage |
+|------------|-----------|----------------------|-------|
+| Primary    | #2563EB   | bg-primary-600       | CTA, primary actions |
+| Primary Lt | #EFF6FF   | bg-primary-50        | Hover background, highlights |
+| Secondary  | #475569   | bg-secondary-600     | Secondary actions |
 
 ### Semantic Colors
-| Name     | Hex       | 用途 |
-|----------|-----------|------|
-| Success  | #16a34a   | 完了・正常状態 |
-| Warning  | #d97706   | 注意・警告 |
-| Error    | #dc2626   | エラー・危険操作 |
-| Info     | #2563eb   | 情報・ヒント |
+| Name     | Hex       | Usage |
+|----------|-----------|-------|
+| Success  | #16a34a   | Complete, normal state |
+| Warning  | #d97706   | Caution, warning |
+| Error    | #dc2626   | Error, destructive action |
+| Info     | #2563eb   | Information, hint |
 
 ### Neutral Colors
-| Scale | Hex       | 用途 |
-|-------|-----------|------|
-| 50    | #fafafa   | ページ背景 |
-| 100   | #f5f5f5   | セクション背景 |
-| 200   | #e5e5e5   | ボーダー（軽） |
-| 300   | #d4d4d4   | ボーダー |
-| 600   | #525252   | セカンダリテキスト |
-| 900   | #171717   | プライマリテキスト |
+| Scale | Hex       | Usage |
+|-------|-----------|-------|
+| 50    | #fafafa   | Page background |
+| 100   | #f5f5f5   | Section background |
+| 200   | #e5e5e5   | Border (light) |
+| 300   | #d4d4d4   | Border |
+| 600   | #525252   | Secondary text |
+| 900   | #171717   | Primary text |
 ```
 
-### タイポグラフィ
+### Typography
 
 ```markdown
 ## Typography
@@ -126,7 +126,7 @@ graph TD
 | Caption       | 12px  | Regular   | text-xs font-normal      |
 ```
 
-### コンポーネントスタイル
+### Component Styles
 
 ```markdown
 ## Component Styles
@@ -151,31 +151,31 @@ graph TD
 - Shadow: shadow-sm
 - Padding: p-6
 
-### Spacing Scale（主要）
-- コンポーネント内パディング: p-4 (16px)
-- セクション間マージン: mt-8 (32px)
-- カードグリッドギャップ: gap-6 (24px)
-- フォームフィールド間: space-y-4 (16px)
+### Spacing Scale (key)
+- Component padding: p-4 (16px)
+- Section margin: mt-8 (32px)
+- Card grid gap: gap-6 (24px)
+- Form field spacing: space-y-4 (16px)
 ```
 
-### アニメーション・インタラクション
+### Animation and Interaction
 
 ```markdown
 ## Motion
 
-- **Hover/Focus変化**: transition-colors duration-150
-- **モーダル出現**: fade-in + zoom-in-95 (200ms)
-- **トースト**: slide-in-from-right (300ms)
-- **ページ遷移**: fade (150ms)
+- **Hover/focus changes**: transition-colors duration-150
+- **Modal enter**: fade-in + zoom-in-95 (200ms)
+- **Toast**: slide-in-from-right (300ms)
+- **Page transition**: fade (150ms)
 
-原則: アニメーションはユーザーの注意を「補助」するために使う。装飾目的のアニメーションは排除。
+Principle: Use animation to support user attention, not as decoration.
 ```
 
 ---
 
-## スタイルガイド生成時の確認事項
+## Style Guide Generation Checklist
 
-1. ペルソナのデバイス傾向に合わせてブレークポイント戦略を決める
-2. ブランドカラーが WCAG AA のコントラスト基準を満たすか確認
-3. 使用フォントが日本語対応している場合、`Noto Sans JP` を追加する
-4. tailwind.config.js に反映するトークンをリストアップしておく
+1. Set breakpoint strategy based on persona device preferences
+2. Confirm brand colors meet WCAG AA contrast requirements
+3. Add `Noto Sans JP` when supporting Japanese text
+4. List tokens to reflect in `tailwind.config.js`

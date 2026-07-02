@@ -1,112 +1,112 @@
-# デザインレビューチェックリスト
+# Design Review Checklist
 
-## 凡例
+## Legend
 
-- **[重大]** → 必ず修正（UX破綻・アクセシビリティ違反）
-- **[警告]** → 推奨修正（一貫性欠如・改善余地）
-- **[提案]** → オプション改善
-
----
-
-## 1. アクセシビリティ (WCAG 2.1 AA)
-
-### カラーコントラスト
-- [ ] **[重大]** 本文テキスト (16px未満): コントラスト比 **4.5:1 以上**
-- [ ] **[重大]** 大テキスト (18px以上 or 14px bold): コントラスト比 **3:1 以上**
-- [ ] **[重大]** UIコンポーネントのボーダー・アイコン: コントラスト比 **3:1 以上**
-- [ ] **[警告]** 装飾のみの要素はコントラスト不要（`aria-hidden="true"` を付与）
-
-### キーボード操作
-- [ ] **[重大]** すべてのインタラクティブ要素が Tab でフォーカス可能
-- [ ] **[重大]** フォーカスリング (`focus-visible:ring-*`) が視認できる
-- [ ] **[重大]** `div/span` を onClick で使っていない（`button` / `a` を使う）
-- [ ] **[重大]** モーダル/ドロップダウンはフォーカストラップを実装している
-- [ ] **[警告]** 論理的な Tab 順序（DOM順と視覚的順序が一致）
-
-### セマンティクス・ARIAラベル
-- [ ] **[重大]** インプットに対応する `<label>` または `aria-label` がある
-- [ ] **[重大]** アイコンのみのボタンに `aria-label` がある
-- [ ] **[重大]** 画像に意味がある場合 `alt` テキストがある（装飾は `alt=""`）
-- [ ] **[重大]** 見出し階層が正しい（H1 > H2 > H3、スキップなし）
-- [ ] **[警告]** ランドマーク要素を使用している (`<main>`, `<nav>`, `<header>`, `<footer>`)
-- [ ] **[警告]** エラーメッセージに `role="alert"` または `aria-live="polite"` がある
-- [ ] **[警告]** ローディング状態に `aria-busy="true"` または `role="status"` がある
+- **[Critical]** → Must fix (UX breakdown or accessibility violation)
+- **[Warning]** → Recommended fix (consistency gap or improvement opportunity)
+- **[Suggestion]** → Optional improvement
 
 ---
 
-## 2. レスポンシブ対応
+## 1. Accessibility (WCAG 2.1 AA)
 
-### ブレークポイント
-- [ ] **[重大]** 375px (iPhone SE) で横スクロールが発生していない
-- [ ] **[重大]** タップターゲットが最低 **44×44px** 以上
-- [ ] **[警告]** テキストが 320px でも折り返しして読める
-- [ ] **[警告]** `sm:` `md:` `lg:` が mobile-first で適用されている
+### Color Contrast
+- [ ] **[Critical]** Body text (under 16px): contrast ratio **4.5:1 or higher**
+- [ ] **[Critical]** Large text (18px+ or 14px bold): contrast ratio **3:1 or higher**
+- [ ] **[Critical]** UI component borders and icons: contrast ratio **3:1 or higher**
+- [ ] **[Warning]** Decorative-only elements do not need contrast (add `aria-hidden="true"`)
 
-### レイアウト
-- [ ] **[警告]** 画像/メディアに `max-w-full` または `object-fit` が指定されている
-- [ ] **[警告]** 固定幅 (`w-[500px]`) を使っていない（`max-w-*` や `w-full` を使う）
-- [ ] **[提案]** モバイルでは1カラム、デスクトップで複数カラムに変換している
+### Keyboard Operation
+- [ ] **[Critical]** All interactive elements are focusable via Tab
+- [ ] **[Critical]** Focus ring (`focus-visible:ring-*`) is visible
+- [ ] **[Critical]** Not using `div/span` with onClick (use `button` / `a`)
+- [ ] **[Critical]** Modals/dropdowns implement focus trap
+- [ ] **[Warning]** Logical Tab order (DOM order matches visual order)
 
----
-
-## 3. デザインシステム整合性
-
-### カラー・タイポグラフィ
-- [ ] **[警告]** デザイントークン外の任意値 (`text-[#333]`, `bg-[#fff]`) を使っていない
-- [ ] **[警告]** `font-size` に任意値 (`text-[13px]`) を使っていない
-- [ ] **[警告]** テキストカラーが目的に沿っている（例: 補足テキストは `text-neutral-600`）
-
-### スペーシング・コンポーネント
-- [ ] **[警告]** `padding/margin` がスペーシングスケール（4px基数）に沿っている
-- [ ] **[警告]** 同じパターンが複数箇所で再利用されている（コピペ重複ではなくコンポーネント化）
-- [ ] **[提案]** `rounded`, `shadow` がコンポーネント種別に沿っている
+### Semantics and ARIA Labels
+- [ ] **[Critical]** Inputs have matching `<label>` or `aria-label`
+- [ ] **[Critical]** Icon-only buttons have `aria-label`
+- [ ] **[Critical]** Meaningful images have `alt` text (decorative images use `alt=""`)
+- [ ] **[Critical]** Heading hierarchy is correct (H1 > H2 > H3, no skipped levels)
+- [ ] **[Warning]** Landmark elements are used (`<main>`, `<nav>`, `<header>`, `<footer>`)
+- [ ] **[Warning]** Error messages use `role="alert"` or `aria-live="polite"`
+- [ ] **[Warning]** Loading states use `aria-busy="true"` or `role="status"`
 
 ---
 
-## 4. インタラクション・状態
+## 2. Responsive Design
 
-- [ ] **[重大]** インタラクティブ要素に hover/focus/active 状態がある
-- [ ] **[重大]** 非活性状態の要素に `disabled` 属性と視覚的表現がある
-- [ ] **[警告]** フォームバリデーションエラーがインライン表示される（送信後のみでなくリアルタイムが望ましい）
-- [ ] **[警告]** 非同期操作中にローディング表示がある
-- [ ] **[警告]** 破壊的操作（削除など）に確認ダイアログがある
-- [ ] **[提案]** ホバー時にカーソルが適切（ボタンは `cursor-pointer`、無効は `cursor-not-allowed`）
+### Breakpoints
+- [ ] **[Critical]** No horizontal scroll at 375px (iPhone SE)
+- [ ] **[Critical]** Tap targets are at least **44×44px**
+- [ ] **[Warning]** Text wraps and remains readable at 320px
+- [ ] **[Warning]** `sm:` `md:` `lg:` are applied mobile-first
 
----
-
-## 5. パフォーマンス
-
-- [ ] **[警告]** `transition-all` を多用していない（変化するプロパティを限定する）
-- [ ] **[警告]** `useEffect` + state 更新がレンダリングループを起こしていない
-- [ ] **[警告]** 大きなリストに仮想化 (`react-window`, `tanstack-virtual`) を使っている
-- [ ] **[提案]** 画像に `loading="lazy"` と適切な `width/height` を指定している
-- [ ] **[提案]** アニメーション要素に `will-change: transform` または `transform: translateZ(0)` がある
+### Layout
+- [ ] **[Warning]** Images/media have `max-w-full` or `object-fit`
+- [ ] **[Warning]** Not using fixed widths (`w-[500px]`) — prefer `max-w-*` or `w-full`
+- [ ] **[Suggestion]** Single column on mobile, multi-column on desktop
 
 ---
 
-## 6. UX一般原則（Nielsen's Heuristics）
+## 3. Design System Consistency
 
-- [ ] **[重大]** 現在地・状態がユーザーに分かる（アクティブナビ、進捗表示）
-- [ ] **[重大]** エラーはユーザーの言葉で、原因と解決策を示している
-- [ ] **[警告]** 操作の取り消し（Undo）・キャンセルが可能
-- [ ] **[警告]** ユーザーが確認なしに取り返しのつかない操作を実行できない
-- [ ] **[提案]** 認知負荷を減らすためのデフォルト値・自動補完がある
+### Color and Typography
+- [ ] **[Warning]** Not using arbitrary values outside tokens (`text-[#333]`, `bg-[#fff]`)
+- [ ] **[Warning]** Not using arbitrary font sizes (`text-[13px]`)
+- [ ] **[Warning]** Text colors match purpose (e.g., supporting text uses `text-neutral-600`)
+
+### Spacing and Components
+- [ ] **[Warning]** `padding/margin` follow the spacing scale (4px base)
+- [ ] **[Warning]** Repeated patterns are reused as components, not copy-pasted
+- [ ] **[Suggestion]** `rounded` and `shadow` match component type
 
 ---
 
-## レビュー出力フォーマット
+## 4. Interaction and States
+
+- [ ] **[Critical]** Interactive elements have hover/focus/active states
+- [ ] **[Critical]** Disabled elements have `disabled` attribute and visual treatment
+- [ ] **[Warning]** Form validation errors appear inline (real-time preferred, not only after submit)
+- [ ] **[Warning]** Loading indicator during async operations
+- [ ] **[Warning]** Destructive actions (delete, etc.) have confirmation dialog
+- [ ] **[Suggestion]** Cursor is appropriate on hover (buttons: `cursor-pointer`, disabled: `cursor-not-allowed`)
+
+---
+
+## 5. Performance
+
+- [ ] **[Warning]** Not overusing `transition-all` (limit to properties that change)
+- [ ] **[Warning]** `useEffect` + state updates are not causing render loops
+- [ ] **[Warning]** Large lists use virtualization (`react-window`, `tanstack-virtual`)
+- [ ] **[Suggestion]** Images have `loading="lazy"` and appropriate `width/height`
+- [ ] **[Suggestion]** Animated elements use `will-change: transform` or `transform: translateZ(0)`
+
+---
+
+## 6. General UX (Nielsen's Heuristics)
+
+- [ ] **[Critical]** Current location and state are visible (active nav, progress indicators)
+- [ ] **[Critical]** Errors use user-friendly language with cause and fix
+- [ ] **[Warning]** Undo and cancel are available where appropriate
+- [ ] **[Warning]** Irreversible actions cannot run without confirmation
+- [ ] **[Suggestion]** Defaults and autocomplete reduce cognitive load
+
+---
+
+## Review Output Format
 
 ```markdown
-## デザインレビュー結果
+## Design Review Results
 
-### [重大] 必須修正 (N件)
-- **アクセシビリティ**: `<button>` の代わりに `<div onClick>` を使用している
-  → `<button>` タグに変更し `focus-visible:ring-*` を追加
+### [Critical] Required Fixes (N items)
+- **Accessibility**: Using `<div onClick>` instead of `<button>`
+  → Change to `<button>` and add `focus-visible:ring-*`
 
-### [警告] 推奨修正 (N件)
-- **デザインシステム**: `text-[13px]` を使用
-  → `text-xs` (12px) または `text-sm` (14px) に変更
+### [Warning] Recommended Fixes (N items)
+- **Design system**: Using `text-[13px]`
+  → Change to `text-xs` (12px) or `text-sm` (14px)
 
-### [提案] 任意改善 (N件)
-- **UX**: 削除ボタン押下後に確認ダイアログを追加すると誤操作を防げる
+### [Suggestion] Optional Improvements (N items)
+- **UX**: Adding a confirmation dialog after delete would prevent accidental actions
 ```

@@ -1,7 +1,7 @@
-# UIコンポーネント実装パターン
+# UI Component Implementation Patterns
 
-Tailwind CSS + React 18 ベースの標準パターン集。
-shadcn/ui や Radix UI が利用可能な場合は積極的に活用する（アクセシビリティ対応済み）。
+Standard patterns based on Tailwind CSS + React 18.
+Prefer shadcn/ui and Radix UI when available (accessibility built in).
 
 ---
 
@@ -22,7 +22,7 @@ shadcn/ui や Radix UI が利用可能な場合は積極的に活用する（ア
 
 ## Button
 
-### バリアント定義
+### Variant Definitions
 
 ```tsx
 const variants = {
@@ -34,23 +34,23 @@ const variants = {
 }
 const sizes = {
   sm: 'px-3 py-1.5 text-xs rounded',
-  md: 'px-4 py-2 text-sm rounded-md',    // デフォルト
+  md: 'px-4 py-2 text-sm rounded-md',    // default
   lg: 'px-6 py-3 text-base rounded-lg',
 }
 const base = 'inline-flex items-center gap-2 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none'
 ```
 
 ```tsx
-// 使用例
+// Usage
 <button className={`${base} ${variants.primary} ${sizes.md}`}>
   <PlusIcon className="w-4 h-4" />
-  作成する
+  Create
 </button>
 
-// ローディング状態
+// Loading state
 <button disabled className={`${base} ${variants.primary} ${sizes.md}`}>
   <Spinner className="w-4 h-4 animate-spin" />
-  保存中...
+  Saving...
 </button>
 ```
 
@@ -59,10 +59,10 @@ const base = 'inline-flex items-center gap-2 font-medium transition-colors focus
 ## Input / Form
 
 ```tsx
-// テキストインプット
+// Text input
 <div className="space-y-1.5">
   <label htmlFor="email" className="block text-sm font-medium text-neutral-700">
-    メールアドレス
+    Email address
   </label>
   <input
     id="email"
@@ -73,23 +73,23 @@ const base = 'inline-flex items-center gap-2 font-medium transition-colors focus
                focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500
                disabled:bg-neutral-50 disabled:text-neutral-500"
   />
-  {/* エラー時 */}
-  <p className="text-xs text-error-600" role="alert">有効なメールアドレスを入力してください</p>
+  {/* Error state */}
+  <p className="text-xs text-error-600" role="alert">Enter a valid email address</p>
 </div>
 ```
 
 ```tsx
-// セレクト
+// Select
 <select className="block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm
                    focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500">
-  <option value="">選択してください</option>
+  <option value="">Select an option</option>
 </select>
 ```
 
 ```tsx
-// フォームレイアウト（2カラム）
+// Form layout (2 columns)
 <form className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-  {/* フルワイズフィールドは col-span-2 */}
+  {/* Full-width fields use col-span-2 */}
 </form>
 ```
 
@@ -98,22 +98,22 @@ const base = 'inline-flex items-center gap-2 font-medium transition-colors focus
 ## Card
 
 ```tsx
-// 基本カード
+// Basic card
 <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
-  <h3 className="text-base font-semibold text-neutral-900">タイトル</h3>
-  <p className="mt-1 text-sm text-neutral-600">説明テキスト</p>
+  <h3 className="text-base font-semibold text-neutral-900">Title</h3>
+  <p className="mt-1 text-sm text-neutral-600">Description text</p>
 </div>
 
-// クリッカブルカード（ホバー効果）
+// Clickable card (hover effect)
 <div className="group rounded-lg border border-neutral-200 bg-white p-6 shadow-sm
                 cursor-pointer transition-shadow hover:shadow-md hover:border-neutral-300">
 </div>
 
-// メトリクスカード（ダッシュボード用）
+// Metrics card (dashboard)
 <div className="rounded-lg border border-neutral-200 bg-white p-6">
-  <p className="text-sm font-medium text-neutral-600">総ユーザー数</p>
+  <p className="text-sm font-medium text-neutral-600">Total users</p>
   <p className="mt-2 text-3xl font-semibold text-neutral-900">12,345</p>
-  <p className="mt-1 text-sm text-success-600">+12% 先月比</p>
+  <p className="mt-1 text-sm text-success-600">+12% vs last month</p>
 </div>
 ```
 
@@ -171,7 +171,7 @@ const base = 'inline-flex items-center gap-2 font-medium transition-colors focus
 
 ## Modal / Dialog
 
-Radix UI の `Dialog` を使う（アクセシビリティ対応済み）。
+Use Radix UI `Dialog` (accessibility built in).
 
 ```tsx
 import * as Dialog from '@radix-ui/react-dialog'
@@ -188,21 +188,21 @@ import * as Dialog from '@radix-ui/react-dialog'
                                 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
       <div className="flex items-start justify-between">
         <Dialog.Title className="text-lg font-semibold text-neutral-900">
-          タイトル
+          Title
         </Dialog.Title>
         <Dialog.Close className="rounded-md p-1 text-neutral-400 hover:text-neutral-600">
           <XIcon className="w-5 h-5" />
         </Dialog.Close>
       </div>
       <Dialog.Description className="mt-2 text-sm text-neutral-600">
-        説明
+        Description
       </Dialog.Description>
       {/* Content */}
       <div className="mt-6 flex justify-end gap-3">
         <Dialog.Close asChild>
-          <button className={secondaryBtn}>キャンセル</button>
+          <button className={secondaryBtn}>Cancel</button>
         </Dialog.Close>
-        <button className={primaryBtn}>確定</button>
+        <button className={primaryBtn}>Confirm</button>
       </div>
     </Dialog.Content>
   </Dialog.Portal>
@@ -214,7 +214,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 ## Alert / Toast
 
 ```tsx
-// インラインアラート
+// Inline alert
 const alertStyles = {
   info:    'bg-primary-50 border-primary-200 text-primary-800',
   success: 'bg-success-50 border-success-200 text-success-800',
@@ -224,14 +224,14 @@ const alertStyles = {
 <div role="alert" className={`rounded-lg border p-4 text-sm ${alertStyles.error}`}>
   <div className="flex gap-3">
     <AlertIcon className="mt-0.5 w-4 h-4 shrink-0" />
-    <p>エラーメッセージ</p>
+    <p>Error message</p>
   </div>
 </div>
 
-// Toast（react-hot-toast または sonner を推奨）
+// Toast (react-hot-toast or sonner recommended)
 import { toast } from 'sonner'
-toast.success('保存しました')
-toast.error('エラーが発生しました')
+toast.success('Saved successfully')
+toast.error('An error occurred')
 ```
 
 ---
@@ -267,15 +267,15 @@ toast.error('エラーが発生しました')
 ## Loading States
 
 ```tsx
-// スピナー
-<div role="status" aria-label="読み込み中">
+// Spinner
+<div role="status" aria-label="Loading">
   <svg className="w-6 h-6 animate-spin text-primary-600" fill="none" viewBox="0 0 24 24">
     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
   </svg>
 </div>
 
-// スケルトンローダー
+// Skeleton loader
 <div className="animate-pulse space-y-3">
   <div className="h-4 w-3/4 rounded bg-neutral-200" />
   <div className="h-4 w-1/2 rounded bg-neutral-200" />
@@ -290,13 +290,13 @@ toast.error('エラーが発生しました')
 ```tsx
 <div className="flex flex-col items-center justify-center py-16 text-center">
   <IllustrationIcon className="w-16 h-16 text-neutral-300" />
-  <h3 className="mt-4 text-base font-semibold text-neutral-900">データがありません</h3>
+  <h3 className="mt-4 text-base font-semibold text-neutral-900">No data yet</h3>
   <p className="mt-1 text-sm text-neutral-500">
-    最初のアイテムを作成してください。
+    Create your first item to get started.
   </p>
   <button className={`mt-6 ${primaryBtn}`}>
     <PlusIcon className="w-4 h-4" />
-    作成する
+    Create
   </button>
 </div>
 ```
@@ -306,12 +306,12 @@ toast.error('エラーが発生しました')
 ## Avatar / Badge
 
 ```tsx
-// アバター
+// Avatar
 <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary-100">
   <span className="text-sm font-medium text-primary-700">KZ</span>
 </span>
 
-// バッジ
+// Badge
 const badgeStyles = {
   gray:    'bg-neutral-100 text-neutral-700',
   blue:    'bg-primary-50 text-primary-700',
@@ -320,6 +320,6 @@ const badgeStyles = {
   red:     'bg-error-50 text-error-700',
 }
 <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${badgeStyles.green}`}>
-  アクティブ
+  Active
 </span>
 ```

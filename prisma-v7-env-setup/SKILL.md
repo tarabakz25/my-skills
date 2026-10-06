@@ -1,6 +1,12 @@
 ---
 name: prisma-v7-env-setup
-description: Set up or upgrade Prisma ORM v7 in Node.js/Next.js projects (install prisma + @prisma/client, create prisma.config.ts, configure datasource URL, handle Prisma CLI .env loading changes, run generate/migrate/introspect/studio, and fix common Prisma v7 errors). Use for Prisma v7の環境構築・アップグレード・初期化・設定・エラー解消。
+description: >-
+  Set up or upgrade Prisma ORM v7 in Node.js/Next.js projects (install prisma +
+  @prisma/client, create prisma.config.ts, configure datasource URL, handle Prisma CLI
+  .env loading changes, run generate/migrate/introspect/studio, and fix common Prisma v7
+  errors). Use when doing Prisma v7 setup, upgrade, init, config, or error fixes (Prisma
+  v7の環境構築・アップグレード・初期化・設定・エラー解消).
+disable-model-invocation: true
 ---
 
 # Prisma V7 Env Setup

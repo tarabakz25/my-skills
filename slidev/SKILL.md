@@ -1,6 +1,7 @@
 ---
 name: slidev
 description: Create, edit, analyze, and refactor Slidev presentations. Use when working with Slidev projects, slides.md files, or when users mention presentations, slides, or Slidev. Supports slide creation, structure analysis, and refactoring operations.
+disable-model-invocation: true
 allowed-tools: Read, Edit, Write, Grep, Glob, Bash
 ---
 

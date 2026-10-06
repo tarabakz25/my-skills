@@ -1,6 +1,7 @@
 ---
 name: nvim-lazy-mini-setup
 description: Help bootstrap, migrate, and maintain a modular Neovim configuration using lazy.nvim (plugin manager) and mini.nvim (core UX modules). Use when asked to set up or refactor Neovim config structure (init.lua, lua/options, lua/plugins), add or configure mini.* modules (mini.files, mini.surround, mini.comment, mini.statusline, mini.starter, etc), convert an existing setup (e.g. packadd/mini.deps) to lazy.nvim, troubleshoot lazy.nvim bootstrapping/lockfile issues, or standardize keymaps/docs around a lazy.nvim + mini.nvim stack.
+disable-model-invocation: true
 ---
 
 # Nvim Lazy Mini Setup

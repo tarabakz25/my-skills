@@ -1,6 +1,7 @@
 ---
 name: create-github-pr
 description: Creates and opens a GitHub pull request from the current branch by summarizing git diff, drafting title/body, and submitting via gh CLI or GitHub MCP. Use when asked to create/open/submit a PR, このブランチでPRを作る, PRを出す, PR化する, or when branch changes need a reviewable GitHub PR.
+disable-model-invocation: true
 ---
 
 # Create GitHub PR

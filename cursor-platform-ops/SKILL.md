@@ -1,6 +1,7 @@
 ---
 name: cursor-platform-ops
 description: "Use when operating Cursor IDE as an agent platform — choosing the right config surface (rules, skills, hooks, settings, MCP, automations), switching workspaces, or using cursor-app-control MCP tools."
+disable-model-invocation: true
 version: 1.0.0
 author: kz
 license: MIT

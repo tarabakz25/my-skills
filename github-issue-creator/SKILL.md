@@ -1,6 +1,7 @@
 ---
 name: github-issue-creator
 description: Create GitHub issues for the current repository with structured templates for bug reports and feature requests. Use when the user wants to report a bug, propose a feature, or create any GitHub issue ticket. Handles title generation, body formatting, label assignment, and milestone/assignee settings via the `gh` CLI.
+disable-model-invocation: true
 ---
 
 # GitHub Issue Creator

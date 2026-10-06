@@ -1,6 +1,7 @@
 ---
 name: rokid-glass
 description: "Use when building Android apps for Rokid Glass3 (glasses-side or phone companion) with Glass3 SDK — device pairing, P2P messaging, media, speech/AI, vision, and YodaOS debugging. Covers Maven setup, two-side initialization, clientId matching, permissions, and scrcpy debugging."
+disable-model-invocation: true
 version: 1.0.0
 author: kz
 license: MIT

@@ -1,6 +1,7 @@
 ---
 name: web-tech-research
 description: Retrieve up-to-date technical information using web search for libraries, frameworks, APIs, CLIs, cloud services, security advisories (CVE), pricing, compatibility, deprecations, and release notes. Use when the user asks for 最新/最新情報/調べて/verify/リリースノート/互換性/サポート期限/価格変更, or when the answer may have changed recently.
+disable-model-invocation: true
 ---
 
 # Web Tech Research

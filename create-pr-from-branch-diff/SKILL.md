@@ -1,6 +1,7 @@
 ---
 name: create-pr-from-branch-diff
 description: Create a pull request from the current Git branch diff against a base branch, including title/body drafting and PR creation via GitHub. Use when asked to "create PR", "open a PR", "ブランチ差分からPRを作る", "この変更をPR化して", or when branch-level code changes must be summarized and submitted as a reviewable PR.
+disable-model-invocation: true
 ---
 
 # Create Pr From Branch Diff

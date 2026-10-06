@@ -1,6 +1,7 @@
 ---
 name: school-rubric-p-review
 description: 学校課題を、提示されたルーブリック（画像・テキスト）に基づいて評価し、最終P評価と総評を作成する。課題レポート、作文、プレゼン資料、実験レポート、制作物説明などを採点するときに使う。特に「ルーブリック準拠で評価して」「Pと総評を出して」と依頼された場合に使う。
+disable-model-invocation: true
 ---
 
 # School Rubric P Review

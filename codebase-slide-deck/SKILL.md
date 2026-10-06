@@ -1,6 +1,7 @@
 ---
 name: codebase-slide-deck
 description: Create slide decks from a local codebase by inspecting architecture, flows, modules, APIs, data models, tests, and implementation details, then turning findings into a presentation outline and editable PPTX. Use when Codex is asked to make slides, a presentation, a PowerPoint, an architecture deck, onboarding deck, technical walkthrough, design review deck, code explanation deck, refactor proposal deck, or Japanese requests such as コードベースからスライド資料を作成, 技術説明資料, 設計共有資料, or PPTX化.
+disable-model-invocation: true
 ---
 
 # Codebase Slide Deck

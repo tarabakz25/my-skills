@@ -1,0 +1,6 @@
+[
+  {
+    "context": "Workspace > Editor",
+    "bindings": { "secondary-k secondary-s": "REPLACE_WITH_VERIFIED_ACTION" }
+  }
+]

@@ -1,0 +1,7 @@
+id = "example-icons"
+name = "Example Icons"
+version = "0.0.1"
+schema_version = 1
+authors = ["Your Name <you@example.com>"]
+description = "Example icon theme"
+repository = "https://github.com/OWNER/REPOSITORY"

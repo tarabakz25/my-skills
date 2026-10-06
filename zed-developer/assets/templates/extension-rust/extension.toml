@@ -1,0 +1,9 @@
+id = "replace-me"
+name = "Replace Me"
+version = "0.0.1"
+schema_version = 1
+authors = ["Your Name <you@example.com>"]
+description = "Replace this description"
+repository = "https://github.com/OWNER/REPOSITORY"
+
+# Add only capability tables required by current Zed documentation.

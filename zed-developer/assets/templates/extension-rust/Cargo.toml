@@ -1,0 +1,11 @@
+[package]
+name = "replace-me"
+version = "0.0.1"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# Replace after checking crates.io and Zed compatibility documentation.
+zed_extension_api = "<latest-published-compatible-version>"

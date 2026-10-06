@@ -1,0 +1,8 @@
+id = "example-snippets"
+name = "Example Snippets"
+version = "0.0.1"
+schema_version = 1
+authors = ["Your Name <you@example.com>"]
+description = "Example snippets"
+repository = "https://github.com/OWNER/REPOSITORY"
+snippets = ["./snippets/snippets.json"]

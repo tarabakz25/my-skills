@@ -1,0 +1,7 @@
+{
+  "Example snippet": {
+    "prefix": "example",
+    "body": ["${1:value}", "$0"],
+    "description": "Replace this example"
+  }
+}

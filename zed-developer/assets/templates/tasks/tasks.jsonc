@@ -1,0 +1,13 @@
+[
+  {
+    "label": "test project",
+    "command": "REPLACE_WITH_COMMAND",
+    "args": [],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "save": "all",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "hide": "never"
+  }
+]

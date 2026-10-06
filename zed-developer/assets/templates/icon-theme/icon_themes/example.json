@@ -1,0 +1,14 @@
+{
+  "$schema": "https://zed.dev/schema/icon_themes/v0.3.0.json",
+  "name": "Example Icons",
+  "author": "Your Name",
+  "themes": [{
+    "name": "Example Icons Dark",
+    "appearance": "dark",
+    "file_suffixes": { "rs": "rust" },
+    "file_icons": {
+      "default": { "path": "./icons/file.svg" },
+      "rust": { "path": "./icons/rust.svg" }
+    }
+  }]
+}

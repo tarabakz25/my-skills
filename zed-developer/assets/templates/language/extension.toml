@@ -1,0 +1,11 @@
+id = "example-language"
+name = "Example Language"
+version = "0.0.1"
+schema_version = 1
+authors = ["Your Name <you@example.com>"]
+description = "Language support for Example"
+repository = "https://github.com/OWNER/REPOSITORY"
+
+[grammars.example]
+repository = "https://github.com/OWNER/tree-sitter-example"
+rev = "REPLACE_WITH_FULL_COMMIT_SHA"

@@ -1,0 +1,6 @@
+name = "Example"
+grammar = "example"
+path_suffixes = ["example"]
+line_comments = ["# "]
+tab_size = 4
+hard_tabs = false

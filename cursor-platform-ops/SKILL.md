@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [cursor, agent, configuration, mcp, workspace]
-    related_skills: [skill-builder, project-init, mcp-server-patterns]
+    related_skills: [make-skill, init, mcp-server-patterns]
 ---
 
 # Cursor Platform Ops
@@ -29,7 +29,7 @@ This skill is the routing layer. It tells the agent **which surface to use**, **
 
 **Don't use for:**
 - Writing a single `.mdc` rule file → use built-in `create-rule` skill
-- Authoring a new skill → use `skill-builder` (custom skills) or built-in `create-skill` (Cursor skills)
+- Authoring or updating a skill → use `make-skill` (custom skills) or built-in `create-skill` (Cursor skills)
 - Editing `settings.json` → use built-in `update-cursor-settings`
 - Creating hooks → use built-in `create-hook`
 - Creating Cursor Automations → use built-in `automate` skill
@@ -45,7 +45,7 @@ When the user wants persistent agent behavior, pick **one primary surface** firs
 |-------------|---------|-------|----------|-------------------|
 | Coding standards, file-specific conventions | **Project rules** | Repo | `.cursor/rules/*.mdc` | `create-rule` |
 | Global preferences across all projects | **User rules** | User | Cursor Settings → Rules (managed via MCP) | this skill § User Rules |
-| Reusable multi-step workflows | **Skills** | User or repo | `~/.skills/`, `~/.cursor/skills/`, `.cursor/skills/` | `skill-builder`, `create-skill` |
+| Reusable multi-step workflows | **Skills** | User or repo | `~/.skills/`, `~/.cursor/skills/`, `.cursor/skills/` | `make-skill`, `create-skill` |
 | Block/audit/format around agent events | **Hooks** | User or repo | `~/.cursor/hooks.json`, `.cursor/hooks.json` | `create-hook` |
 | Font, theme, format-on-save, keybindings | **Settings** | User or workspace | `settings.json`, `.vscode/settings.json` | `update-cursor-settings` |
 | Connect external APIs, databases, SaaS | **MCP servers** | User/team/project | `~/.cursor/mcp.json`, dashboard | `mcp-server-patterns` |
@@ -93,9 +93,9 @@ Need recurring cloud execution?
 | Path | Purpose |
 |------|---------|
 | `~/.skills/<name>/SKILL.md` | Authoritative custom skill store (git-backed) |
-| `~/.skills/skill-builder/` | Meta-skill for authoring custom skills |
+| `~/.skills/make-skill/` | Meta-skill for creating or updating custom skills |
 
-Agent runtimes may symlink `~/.skills/` into `~/.cursor/skills/` or `~/.claude/skills/`. When creating a **custom** skill the user owns, write to `~/.skills/` per `skill-builder`.
+Agent runtimes may symlink `~/.skills/` into `~/.cursor/skills/` or `~/.claude/skills/`. When creating a **custom** skill the user owns, write to `~/.skills/` per `make-skill`.
 
 ### Project-level (`.cursor/`)
 
@@ -144,7 +144,7 @@ Available in the **Agents Window** (Glass). Read tool schemas from `~/.cursor/pr
 ```
 create_project({ path: "/absolute/path/to/new-app" })
   → move_agent_to_root({ rootPath: "/absolute/path/to/new-app" })
-  → /project-init   (optional: generate README.md + CLAUDE.md)
+  → /init   (optional: generate README.md + AGENTS.md + CLAUDE.md)
 ```
 
 ---
@@ -174,12 +174,12 @@ Do **not** put team coding standards in user rules when the repo should own them
 
 | Store | Path | Write? | Use case |
 |-------|------|--------|----------|
-| Custom library | `~/.skills/` | Yes | Durable, git-versioned workflows (`skill-builder` format) |
+| Custom library | `~/.skills/` | Yes | Durable, git-versioned workflows (`make-skill` format) |
 | Personal Cursor | `~/.cursor/skills/` | Yes | Cursor-native discovery |
 | Project | `.cursor/skills/` | Yes | Team-shared workflows in repo |
 | Built-in | `~/.cursor/skills-cursor/` | **Never** | Cursor-managed (`create-rule`, `automate`, etc.) |
 
-When the user invokes `/skill-builder`, create under `~/.skills/`. When they say "make this a Cursor skill for my team", use `.cursor/skills/`.
+When the user invokes `/make-skill`, create under `~/.skills/`. When they say "make this a Cursor skill for my team", use `.cursor/skills/`.
 
 ---
 

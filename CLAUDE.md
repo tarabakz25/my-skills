@@ -17,21 +17,21 @@ No repo-level build, dev, or lint commands. This is a content library, not an ap
 Per-skill recon helper:
 
 ```bash
-python3 ~/.skills/project-init/scripts/detect_project.py .
+python3 ~/.skills/init/scripts/detect_project.py .
 ```
 
 ## Project Structure
 
 - `SKILL.md` — one per skill directory; the only required file
 - `references/`, `templates/`, `scripts/`, `assets/` — optional per skill
-- `skill-builder/` — authoring conventions (read before creating skills)
-- `project-init/` — generate README/CLAUDE for other repos
-- `spec/` — spec-driven dev (`/spec create|review|build`)
+- `make-skill/` — authoring conventions (create or update skills; `/make-skill`)
+- `init/` — generate README/AGENTS/CLAUDE for other repos
+- `solo-sdd/` — lightweight SDD (`/solo-sdd create|design|build`) → `.sdd/yyyymmdd-feature/`
 
 ## Code Style
 
 - Skill directory names: lowercase kebab-case
-- Frontmatter must start at byte 0 with `---`; required fields per `skill-builder/SKILL.md`
+- Frontmatter must start at byte 0 with `---`; required fields per `make-skill/SKILL.md`
 - Body: Overview → When to Use → workflow sections → Common Pitfalls → Verification Checklist
 - Commands and paths must be copy-pasteable; no TODO placeholders in committed skills
 - Prefer extending an existing skill over duplicating (~80% overlap rule)

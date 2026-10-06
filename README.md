@@ -31,7 +31,7 @@ No install step at the repo level. Skills are consumed directly from this direct
 To scaffold project docs in any repo:
 
 ```bash
-python3 ~/.skills/project-init/scripts/detect_project.py .
+python3 ~/.skills/init/scripts/detect_project.py .
 ```
 
 ### Per-Skill Tests
@@ -42,9 +42,9 @@ Only individual skills define tests; run them inside the skill directory that de
 
 ```
 ~/.skills/
-├── project-init/          # Generate README.md / CLAUDE.md for other projects
-├── skill-builder/         # Meta-skill: how to author skills
-├── spec/                  # Spec-driven development workflow
+├── init/                  # Generate README.md / AGENTS.md / CLAUDE.md for other projects
+├── make-skill/            # Meta-skill: create or update skills
+├── solo-sdd/              # Lightweight solo SDD workflow
 ├── code-review/           # Example domain skill
 ├── .system/               # Codex system skills (imagegen, skill-installer, etc.)
 └── <skill-name>/          # One directory per skill
@@ -57,7 +57,7 @@ Only individual skills define tests; run them inside the skill directory that de
 
 ## Authoring Skills
 
-Read `skill-builder/SKILL.md` before creating or editing skills. Conventions:
+Read `make-skill/SKILL.md` before creating or editing skills (`/make-skill`). Conventions:
 
 - Directory name: lowercase kebab-case (`my-skill-name/`)
 - Required frontmatter: `name`, `description`, `version`, `author`, `license`, `platforms`, `metadata.hermes`
@@ -66,10 +66,10 @@ Read `skill-builder/SKILL.md` before creating or editing skills. Conventions:
 To init docs for a new codebase project:
 
 ```
-/project-init
+/init
 ```
 
-See `project-init/SKILL.md` for flags (`--readme`, `--claude`, `--force`).
+See `init/SKILL.md` for flags (`--readme`, `--agents`, `--claude`, `--force`).
 
 ## License
 

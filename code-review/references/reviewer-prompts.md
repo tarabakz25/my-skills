@@ -2,18 +2,21 @@
 
 Two halves: (A) high-signal questions to interrogate a change, (B) how to write comments people act on.
 
+> **Required companion:** run the full falsification pass in `adversarial-verification.md` before writing the verdict. The prompts below feed that pass; they do not replace it.
+
 ## A. Prompt patterns (apply to the whole diff or a tricky hunk)
 
-Use these as thinking probes — or fan them out as separate `delegate_work` lenses for a max-effort review.
+Use these as thinking probes — or fan them out as parallel `Task` `generalPurpose` subagents per `subagent-orchestration.md` (required for full review; optional extra lenses for max-effort).
 
 1. **Top-3 risks.** "What are the three things most likely to break or be exploited in this change?" Forces prioritization over a flat list.
 2. **10× scale.** "What breaks first if traffic / data / users grow 10×?" Surfaces N+1s, unbounded memory, missing pagination, hot locks.
 3. **First-principles / blank-slate.** "Ignore how it's written — what's the simplest correct design for this problem? How far is the PR from that?" Catches over-engineering and wrong abstractions.
 4. **Root-cause (bug-fix PRs).** "Does this fix the *cause* or just the *symptom*? What class of bug does this leave unaddressed?" Demand a regression test that fails on the old code.
-5. **Adversary pass.** "I'm a malicious user. Walk every input from the boundary to a sink — where's the unchecked one?" (Pair with `security_review.md`.)
-6. **Failure-mode pass.** "For each external call / I/O / await: what happens on timeout, partial write, retry, or crash mid-operation?" Surfaces missing idempotency and error handling.
-7. **Future-maintainer pass.** "Six months from now, someone changes the line above this. What silently breaks?" Tests hidden coupling and missing tests.
-8. **Diff-vs-description pass.** "Does the code do exactly what the PR says — no more (scope creep), no less (TODO left)?"
+5. **Adversarial verification (required).** "Assume this is wrong. Extract load-bearing claims, invert them, and find the smallest concrete counterexample. Would the tests still pass if the bug existed?" (Full method: `adversarial-verification.md`.)
+6. **Security adversary (narrow).** "I'm a malicious user. Walk every input from the boundary to a sink — where's the unchecked one?" (Pair with `security-review.md`.)
+7. **Failure-mode pass.** "For each external call / I/O / await: what happens on timeout, partial write, retry, or crash mid-operation?" Surfaces missing idempotency and error handling.
+8. **Future-maintainer pass.** "Six months from now, someone changes the line above this. What silently breaks?" Tests hidden coupling and missing tests.
+9. **Diff-vs-description pass.** "Does the code do exactly what the PR says — no more (scope creep), no less (TODO left)?"
 
 ## B. Comment craft — make feedback land
 
@@ -37,10 +40,12 @@ Use these as thinking probes — or fan them out as separate `delegate_work` len
 3. Still unresolved → escalate to tech lead / maintainer. Net-positive changes shouldn't rot in review limbo.
 
 **Self-check before posting the review:**
-- [ ] Did I read the PR description and understand the intent?
-- [ ] Did I read every changed (human-written) line, in context?
+- [ ] Did I launch ≥1 Task subagent (parent did not solitary-review)?
+- [ ] Did I (or the subagent) read the PR description and understand the intent?
+- [ ] Did subagents read every changed (human-written) line, in context?
+- [ ] Did adversarial verification run (claims → invert → counterexamples → tests-as-proof)?
 - [ ] Is every finding labeled by severity?
 - [ ] Did I explain WHY for each, with file:line?
 - [ ] At least one 💙 if the PR deserves it?
-- [ ] Verdict consistent with findings (no 🔴 ⇒ LGTM-able)?
+- [ ] Verdict consistent with findings (no 🔴 and no open falsified load-bearing claim ⇒ LGTM-able)?
 - [ ] Am I blocking only on real issues, not personal preference?

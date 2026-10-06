@@ -1,147 +1,167 @@
 ---
 name: smart-commit
-description: Analyzes git diff and automatically creates commits with Conventional Commits format messages. Use when the user wants to commit changes, mentions "smart commit", or asks to analyze changes and commit them automatically.
+description: Analyze git diff, compare scope with the previous commit, and split staging into separate Conventional Commits when different scopes are mixed. Use when the user wants to commit changes, mentions "smart commit", asks for scoped/split commits, or wants unrelated changes committed separately.
+disable-model-invocation: true
 ---
 
 # Smart Commit
 
-This skill automatically analyzes git changes and creates commits with well-formatted Conventional Commits messages.
+This skill analyzes changes, compares them with the most recent commit scope, and creates separate commits per scope instead of committing everything at once.
 
 ## When to Use
 
-- User asks to commit changes
-- User mentions "smart commit" or similar phrases
+- User asks to commit changes or mentions "smart commit"
 - User wants automatic commit message generation based on diff analysis
-- User requests to analyze and commit changes
+- User asks for automatic commit with scope-aware splitting
+- User wants unrelated changes committed separately
+- User wants staging decisions based on diff contents
+- User asks to avoid mixing different concerns in one commit
+
+## Core Policy
+
+- Do not stage all files blindly.
+- Split changes into coherent scope groups.
+- If a scope differs from the previous commit scope, create a separate staged set and separate commit.
+- Keep Conventional Commits format for each commit message.
 
 ## Instructions
 
 Follow these steps in order:
 
-### 1. Check Repository Status
-
-First, verify this is a git repository and check current status:
+### 1. Inspect repository and current state
 
 ```bash
-git status
+git status --short
+git diff --name-status
+git diff --cached --name-status
 ```
 
-If not a git repository, inform the user and exit.
+If there are no changes, report and exit. If this is not a git repository, inform the user and suggest `git init`.
 
-### 2. Analyze Changes
+### 2. Detect the previous commit scope
 
-Get both staged and unstaged changes:
+Read previous subject and touched paths:
 
 ```bash
-git diff
-git diff --cached
+git log -1 --pretty=%s
+git show --name-only --pretty="" HEAD
 ```
 
-If no changes exist, inform the user and exit.
+Determine `previous_scope` as follows:
 
-### 3. Stage All Changes
+1. If subject matches `<type>(<scope>): ...`, use that `<scope>`.
+2. Otherwise infer from dominant path area in previous commit.
+3. If still unclear, set `previous_scope=unknown` and continue with path-based grouping only.
 
-Automatically stage all changes:
+### 3. Classify current changes into scope groups
+
+Use file paths and diff intent to classify each change.
+
+Recommended heuristics:
+
+- `docs/**`, `README*`, `*.md` -> `docs`
+- `test/**`, `__tests__/**`, `*.test.*`, `*.spec.*` -> `test`
+- `ci/**`, `.github/workflows/**` -> `ci`
+- `scripts/**`, tooling config files -> `chore`
+- `src/<domain>/**` -> `<domain>` (e.g. `auth`, `api`, `ui`, `db`)
+
+If a single file contains mixed concerns, split hunks with:
 
 ```bash
-git add -A
+git add -p <file>
 ```
 
-### 4. Analyze Diff and Generate Commit Message
+### 4. Build staging sets by scope
 
-Examine the staged diff carefully:
+Create separate staging sets per scope and commit each set independently.
+
+Important rules:
+
+- If one scope matches `previous_scope`, it may be committed first as a continuation.
+- Every scope different from `previous_scope` must be committed separately.
+- Never include unrelated scope files in the same commit.
+
+Use selective staging:
 
 ```bash
-git diff --cached
+git add <files-of-one-scope>
+git diff --cached --name-only
 ```
 
-Based on the changes, generate a commit message following **Conventional Commits** format:
+If incorrect files were staged:
 
-**Format**: `<type>(<scope>): <subject>`
+```bash
+git restore --staged <file>
+```
 
-**Types**:
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Code formatting (no logic change)
-- `refactor`: Code refactoring
-- `test`: Adding or modifying tests
-- `chore`: Build process, tools, dependencies
-- `perf`: Performance improvements
+### 5. Generate one commit message per scope
+
+For each staged set, generate Conventional Commit message:
+
+Format: `<type>(<scope>): <subject>`
+
+Type decision hints:
+
+- `feat`: new behavior
+- `fix`: bug correction
+- `refactor`: structural change, no behavior change
+- `docs`: documentation
+- `test`: test changes
+- `style`: formatting only, no logic change
+- `chore`: maintenance/tooling
+- `perf`: performance improvements
 - `ci`: CI/CD changes
-- `build`: Build system changes
-- `revert`: Reverting previous commits
+- `build`: build system changes
+- `revert`: reverting previous commits
 
-**Guidelines**:
-- Scope is optional but recommended (e.g., `auth`, `api`, `ui`)
-- Subject should be concise, in imperative mood
-- If multiple unrelated changes exist, mention the most significant one
-- Keep the message under 72 characters for the first line
-- Use lowercase for subject (except proper nouns)
-- No period at the end of subject
+Keep subject concise, imperative, lowercase where reasonable, under 72 characters, no trailing period.
 
-**Examples**:
-- `feat(auth): add JWT token validation`
-- `fix(api): resolve null pointer in user endpoint`
-- `docs(readme): update installation instructions`
-- `refactor(database): simplify query builder logic`
-- `test(user): add unit tests for login function`
+### 6. Commit in sequence
 
-### 5. Execute Commit
-
-Create the commit with the generated message:
+For each scope group:
 
 ```bash
 git commit -m "<generated-message>"
 ```
 
-**Important**:
-- Do NOT add Claude Code attribution footer (no "Generated with Claude Code" or "Co-Authored-By")
-- Keep the message clean and professional
-- Use only the Conventional Commits format
+Repeat until all groups are committed.
 
-### 6. Confirm Success
+### 7. Final verification
 
-After committing, show:
-1. The commit message used
-2. Summary of what was committed
-3. Current git status
+```bash
+git log --oneline -n 5
+git status --short
+```
 
-## Error Handling
+Report:
 
-- **No git repository**: Inform user and suggest `git init`
-- **No changes**: Inform user that working directory is clean
-- **Commit fails**: Show error message and suggest fixes
+1. Created commits (newest first)
+2. Files included in each commit
+3. Remaining uncommitted changes (if any)
 
-## Examples
+## Safety Rules
 
-### Example 1: Feature Addition
+- Do not use `git add -A` by default.
+- Do not rewrite history (`rebase`, `reset --hard`) unless explicitly requested.
+- If classification is ambiguous, use the smallest safe commit boundaries and explain assumptions.
+- If a commit fails, show the error and suggest fixes; do not force through hooks.
 
-**Changes**: Added new login page component
+## Example Outcome
 
-**Generated Message**: `feat(auth): add login page component`
+- Previous commit: `feat(auth): add refresh token endpoint`
+- Current changes include:
+  - `src/auth/*` bug fix
+  - `docs/api.md` update
+  - `.github/workflows/ci.yml` adjustment
 
-### Example 2: Bug Fix
+Expected split:
 
-**Changes**: Fixed null pointer exception in API handler
-
-**Generated Message**: `fix(api): resolve null pointer in request handler`
-
-### Example 3: Multiple Files
-
-**Changes**: Updated README.md and added installation script
-
-**Generated Message**: `docs(project): add installation script and update readme`
-
-### Example 4: Refactoring
-
-**Changes**: Reorganized database query logic
-
-**Generated Message**: `refactor(db): reorganize query builder structure`
+1. `fix(auth): handle expired refresh token error`
+2. `docs(api): update token refresh documentation`
+3. `ci(workflows): refine ci job conditions`
 
 ## Notes
 
 - This skill operates fully automatically without user confirmation
-- All unstaged and staged changes will be included
-- The skill focuses on creating meaningful, concise commit messages
+- Changes are grouped by scope; unrelated concerns are never mixed in one commit
 - Conventional Commits format ensures consistency across the project

@@ -1,0 +1,77 @@
+# QA Blocking Defects
+
+Load this file during final export/QA for the Presentations skill. Any item below fails the deck until patched.
+
+Blocking defects:
+
+- tone/content maturity mismatch, such as a silly, fandom, classroom, party, or entertainment prompt rendered as a sober work deck without a deliberate comic premise
+- palette/formality mismatch, such as executive navy, tiny source-footnote energy, boardroom typography, or consulting chrome on a playful deck
+- palette with no stated source, no named token roles, or no relationship to the audience, subject world, brand, format metaphor, data semantics, or key image assets
+- palette chosen as a flat swatch set without role assignments, locked anchors, contrast relationships, and at least three candidate directions for creative/playful decks
+- palette for a non-branded deck chosen only by "nice colors" language, with no emotional/format anchor and no on-slide role test
+- gradients used as the primary style move across the deck instead of solid planes, typography, image crops, data styling, layout, or subject imagery
+- creative/playful deck where saturated color exists only in small chips, labels, or footers instead of major fields, image framing, expressive typography, chart/table styling, or repeated motif behavior
+- creative/playful deck that fails the thumbnail test: when viewed as a contact sheet, the deck reads as mostly dark/gray/neutral and low-energy despite a fun, fandom, party, classroom, or entertainment prompt
+- colors that fight the imagery, make subject images feel pasted on, muddy vibrant assets, or use unrelated muted bars/overlays around high-recognition characters or products
+- arbitrary rainbow color, one-note hue families, or too many equal-strength accents when a smaller controlled palette would make the deck clearer
+- chart/table design mismatch, such as default Office/Excel colors, off-theme table fills, generic black headers, unstyled body text, cramped rows, heavy grids, duplicate legends, illegible ticks, or data labels that collide with the evidence
+- structure mismatch, such as a rubric, scorecard, table, dashboard, or panel grid chosen by habit instead of because it fits the audience and topic
+- title page that reads as a dashboard opener, content slide, KPI-card cluster, 2x2 grid, hero-plus-card rail, or generic title-plus-panels layout
+- title page built by reusing the normal content slide shell instead of a dedicated cover concept from `titlePageConcept`
+- title page with more than one equal-weight claim, chart, data cluster, or visual idea competing for first read
+- title page that is not prompt-specific enough: it would still look acceptable after swapping in a different company, sector, event, product, or person
+- type-led title page where the type, measure, spacing, and negative space do not carry the design
+- imagery-led title page with unresolved, generic, decorative, too-small, or irrelevant imagery
+- data-led title page that uses a strip/grid of metrics instead of one memorable number or distilled evidence artifact
+- creative deck using only safe grids/cards when the prompt calls for visual energy and the content could support slants, crops, masked images, asymmetric type, editorial spreads, or artifact-like layouts
+- decorative-only native geometry such as blobs, orbs, filler badges, random diagonals, or arbitrary shapes that do not carry composition, data, masking, hierarchy, or artifact form
+- image-use mismatch, such as subject images that look pasted on, too small, unrelated, purely decorative, or unable to explain why they belong on that slide
+- image fit/scale mismatch, such as stretched assets, accidental cover crops, clipped labels/faces/products/diagrams, tiny unreadable screenshots, low-resolution blowups, or inconsistent scale across repeated evidence objects
+- copy that is too sterile, abstract, or corporate for a playful audience when the premise invites warmer, funnier, or more characterful language
+- non-appendix slides that read like research pages, dashboards, or source dumps instead of live presentation slides
+- any non-appendix slide where prose or bullets are placed inside a big visible box without an explicit user-requested artifact form
+- any slide dominated by a large visible rectangle/card/panel/block when the content could be open typography, a chart/table, a diagram, an image-led explanation, speaker notes, or a split slide
+- giant mostly empty cards or tiles used as whitespace, especially price/metric cards with a number at the top and tiny caption near the bottom
+- repeated boxes, blocks, square tiles, boxed paragraph panels, or card grids used as the default visual template without a real comparative, artifact, UI, reference, or operational reason
+- "title + three boxes/cards" as a recurring scaffold unless the user explicitly asked for that structure or the slide brief justifies it as a real modular comparison
+- more than one main job on a slide without a deliberate split or staged hierarchy
+- no dominant visual/data/text object, or too many equal-weight components competing for first read
+- rich data presented as many small undifferentiated boxes when a ranked, grouped, annotated, or appendix treatment would be clearer
+- data-rich, investor, earnings, market, operating, scientific, or benchmark decks with chartable evidence but no native `<chart>` or `<table>` nodes
+- one-point or two-endpoint charts used as if they were rich evidence, especially a single-series line connecting one point to one point with no benchmark, history, annotation, or delta treatment
+- line/area charts with fewer than 4 periods unless explicitly justified as a before/after slopegraph with context, direct labels, and a dominant delta
+- charts that use a large plot area for one number, two values, or a subtraction problem that would read better as open metric typography, a paired comparison, a compact table, or an annotated sentence
+- ordinary bar, line, combo, waterfall, pie/doughnut, scatter/bubble, funnel, histogram, treemap, or table views rebuilt from boxes/shapes without an explicit slide-brief reason
+- blank/missing images
+- wrong image aspect ratio, accidental cover crop, or clipped subject/labels
+- title/body collisions
+- title/subtitle overlap or any unintended text-on-text collision
+- PPTX render wrapping/spacing differs from Granola preview enough to cause collision, clipping, or visual degradation
+- work title wrapping without intent
+- less than 0.3 in / 32 px between title/subtitle and first body object
+- footer/source collisions
+- overflow/clipping
+- any important content, source/footer text, chart, table, image, label, logo, page marker, or caption spilling outside the slide canvas or sitting below the visible frame
+- footer/source text that runs past its reserved rail, overlaps content, or requires unreadably tiny type to fit
+- overfull slides where the correct fix is splitting, cutting, moving detail to notes/appendix, or redesigning the layout, but the JSX instead lets content clip or spill
+- low contrast, especially text over photos, gradients, or busy backgrounds without a deliberate readability treatment
+- tiny filler text, required reading below the legibility floor, or any text that needs zooming to read in the rendered PNG
+- uneven repeated spacing
+- misalignment
+- inconsistent logo placement, size, or clearspace across normal slides
+- progress systems that are unnecessary, visually overwhelming, website-like sidebars/nav rails, or move backward/confuse deck order
+- generic repeated segmented-bar progress indicators, corner bead/status rows, or decorative step blocks instead of a custom deck-native device
+- off-slide or accidentally oversized shapes/boxes from missing explicit dimensions
+- pill/chip text that is clipped, crowded, off-center, or used as decoration
+- default-looking charts/tables, including stock native table styles that have not been redesigned into the deck's visual system
+- unresolved, fake, generic, repeated, decorative, or montage-style raster/shape assets instead of real subject imagery
+- educational/scientific decks whose subject assets do not meet the clean modern textbook illustration standard
+- complex subject imagery created from SVGs, Canvas/OffscreenCanvas, JSX/native shapes, HTML/CSS screenshots, or procedural geometry, even if saved as `.png`
+- screenshots/pages from source documents used as assets instead of rebuilt content
+- visible placeholder text or native slide-number placeholders (`Slide Number`, `sldNum`)
+- unreadable data labels
+- unclear/floating arrows
+- missing diagram marks
+- fake/irrelevant imagery
+- accidental meta text such as "generated with", "built-in image tool", "native chart object", "itinerary research", or "this deck"
+

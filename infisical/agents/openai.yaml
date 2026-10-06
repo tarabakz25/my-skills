@@ -1,0 +1,4 @@
+interface:
+  display_name: "Infisical"
+  short_description: "Secrets setup, CLI, SDK, and CI/CD"
+  default_prompt: "Set up Infisical for this repo and wire secrets into local run and CI/CD."

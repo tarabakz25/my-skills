@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design"
+  short_description: "Bold aesthetic frontend HTML direction"
+  default_prompt: "Use $design to invent a distinctive aesthetic direction, then build the HTML/CSS with intentional typography, color, motion, and composition."

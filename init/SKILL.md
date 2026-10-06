@@ -1,33 +1,34 @@
 ---
-name: project-init
-description: "Use when a new or existing project is missing README.md and/or CLAUDE.md. Analyze the codebase and generate both from detected stack, commands, structure, and conventions."
-version: 1.0.0
+name: init
+description: "Use when a new or existing project is missing README.md, AGENTS.md, and/or CLAUDE.md. Analyze the codebase and generate them from detected stack, commands, structure, and conventions."
+disable-model-invocation: true
+version: 1.1.0
 author: kz
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
   hermes:
-    tags: [init, readme, claude-md, onboarding, project]
+    tags: [init, readme, agents-md, claude-md, onboarding, project]
     related_skills: [codebase-onboarding, prompt-optimizer]
 ---
 
-# Project Init
+# Init
 
 ## Overview
 
-New projects often ship code before docs. This skill inspects manifests, directory layout, scripts, tests, and recent git history, then writes **README.md** (for humans) and **CLAUDE.md** (for agents) at the project root. Content is inferred from the repo — not copied from templates verbatim.
+New projects often ship code before docs. This skill inspects manifests, directory layout, scripts, tests, and recent git history, then writes **README.md** (for humans), **AGENTS.md** (canonical agent context), and **CLAUDE.md** (imports AGENTS.md for Claude Code) at the project root. Content is inferred from the repo — not copied from templates verbatim.
 
-For a full onboarding narrative (architecture map, request lifecycle, "where to look" tables), also load `codebase-onboarding`. This skill stops at generating the two files.
+For a full onboarding narrative (architecture map, request lifecycle, "where to look" tables), also load `codebase-onboarding`. This skill stops at generating the docs files.
 
 ## When to Use
 
 **Use this skill when:**
-- User invokes `/project-init` or asks to "init project docs"
-- A new project has no `README.md` and/or no `CLAUDE.md`
+- User invokes `/init` or asks to "init project docs"
+- A new project has no `README.md`, `AGENTS.md`, and/or `CLAUDE.md`
 - User scaffolded a repo and wants agent/human context generated from code
 
 **Don't use for:**
-- Both files already exist and user only wants edits (enhance in place; don't overwrite)
+- Files already exist and user only wants edits (enhance in place; don't overwrite)
 - Deep architecture tour without writing files (use `codebase-onboarding`)
 - Open-source packaging with LICENSE/CONTRIBUTING (use `opensource-pipeline`)
 
@@ -35,12 +36,15 @@ For a full onboarding narrative (architecture map, request lifecycle, "where to 
 
 | Command | Action |
 |---------|--------|
-| `/project-init` | Generate missing README.md and CLAUDE.md in current project root |
-| `/project-init --readme` | Generate README.md only if missing |
-| `/project-init --claude` | Generate CLAUDE.md only if missing |
-| `/project-init --force` | Regenerate even when files exist (confirm with user first) |
+| `/init` | Generate missing README.md, AGENTS.md, and CLAUDE.md in current project root |
+| `/init --readme` | Generate README.md only if missing |
+| `/init --agents` | Generate AGENTS.md only if missing |
+| `/init --claude` | Generate CLAUDE.md only if missing |
+| `/init --force` | Regenerate even when files exist (confirm with user first) |
 
 Default project root: current working directory. Accept explicit path if user provides one.
+
+Legacy alias: `/project-init` → treat as `/init`.
 
 ---
 
@@ -50,16 +54,16 @@ Default project root: current working directory. Accept explicit path if user pr
 
 ```bash
 test -f README.md && echo "README exists" || echo "README missing"
+test -f AGENTS.md && echo "AGENTS exists" || echo "AGENTS missing"
 test -f CLAUDE.md && echo "CLAUDE exists" || echo "CLAUDE missing"
 ```
 
 | State | Action |
 |-------|--------|
-| Both missing | Generate both |
-| Only README missing | Generate README only |
-| Only CLAUDE missing | Generate CLAUDE only |
-| Both exist, no `--force` | Stop; offer to enhance sections instead |
-| Either exists + `--force` | Read existing file first, merge useful content, then rewrite |
+| All missing | Generate README + AGENTS + CLAUDE |
+| Some missing | Generate only the missing files |
+| All exist, no `--force` | Stop; offer to enhance sections instead |
+| Any exist + `--force` | Read existing file first, merge useful content, then rewrite |
 
 If a file exists, **read it before writing**. Preserve user-written sections (license, deployment notes, team rules).
 
@@ -68,7 +72,7 @@ If a file exists, **read it before writing**. Preserve user-written sections (li
 Run the detector script from the project root:
 
 ```bash
-python3 ~/.skills/project-init/scripts/detect_project.py .
+python3 ~/.skills/init/scripts/detect_project.py .
 ```
 
 Use the JSON plus targeted reads. In parallel, gather:
@@ -88,7 +92,7 @@ Use the JSON plus targeted reads. In parallel, gather:
 - Trust code over config when they conflict
 - If unknown, say "Could not detect …" — do not invent commands
 
-For deeper mapping (data flow, architecture diagram), load `~/.skills/codebase-onboarding/SKILL.md` Phase 2–3 — but still output only README + CLAUDE.
+For deeper mapping (data flow, architecture diagram), load `~/.skills/codebase-onboarding/SKILL.md` Phase 2–3 — but still output only the docs files.
 
 ### Step 3 — Derive Content
 
@@ -123,7 +127,7 @@ If a command is not detectable, omit that section instead of guessing.
 
 Target: **human readers** — what it is, how to install, run, test, build, and where things live.
 
-Use structure from `~/.skills/project-init/templates/README.md.tpl` as an outline, not a fill-in-the-blank. Write complete prose and real commands.
+Use structure from `~/.skills/init/templates/README.md.tpl` as an outline, not a fill-in-the-blank. Write complete prose and real commands.
 
 **README must include:**
 - Project title and 1–2 sentence overview
@@ -134,17 +138,17 @@ Use structure from `~/.skills/project-init/templates/README.md.tpl` as an outlin
 - License line if LICENSE file exists; otherwise omit or "TBD"
 
 **README must not:**
-- Duplicate entire CLAUDE.md
+- Duplicate entire AGENTS.md
 - List every dependency
 - Include secrets or `.env` values
 
-### Step 5 — Write CLAUDE.md
+### Step 5 — Write AGENTS.md
 
-Target: **agents editing this repo** — lean context always loaded. Keep **≤ 80 lines**.
+Target: **agents editing this repo** (Cursor, Codex, and other AGENTS.md-aware tools) — lean context always loaded. Keep **≤ 80 lines**. This is the **canonical** agent instruction file.
 
-Use `~/.skills/project-init/templates/CLAUDE.md.tpl` as outline.
+Use `~/.skills/init/templates/AGENTS.md.tpl` as outline.
 
-**CLAUDE.md must include:**
+**AGENTS.md must include:**
 - What This Is (one short paragraph)
 - Tech stack bullets
 - Build & Run commands (copy from verified scripts)
@@ -152,24 +156,39 @@ Use `~/.skills/project-init/templates/CLAUDE.md.tpl` as outline.
 - Code style / testing conventions detected from samples
 - Do Not Do (3–6 bullets: secrets, generated files, project-specific rules)
 
-**CLAUDE.md must not:**
+**AGENTS.md must not:**
 - Repeat README marketing copy
 - Exceed ~100 lines
 - Store user preferences unrelated to this repo
 
 Leave `## Current Goal` as an empty placeholder comment for the user to fill.
 
-### Step 6 — Verify
+### Step 6 — Write CLAUDE.md
+
+Target: **Claude Code**. Do **not** duplicate AGENTS.md content.
+
+Default: write a thin import file using `~/.skills/init/templates/CLAUDE.md.tpl`:
+
+```markdown
+@AGENTS.md
+```
+
+Add Claude-specific notes below the import only when recon finds something Claude-only (rare). Prefer keeping all shared guidance in AGENTS.md.
+
+If AGENTS.md is missing and the user asked for `--claude` only, still write the full lean agent body into AGENTS.md first (or ask), then point CLAUDE.md at it — avoid a standalone full CLAUDE.md that drifts.
+
+### Step 7 — Verify
 
 Before finishing:
 
 ```bash
 test -f README.md && test -s README.md
+test -f AGENTS.md && test -s AGENTS.md
 test -f CLAUDE.md && test -s CLAUDE.md
-wc -l CLAUDE.md   # should be ≤ 100
+wc -l AGENTS.md   # should be ≤ 100
 ```
 
-Spot-check that every shell command in both files appears in manifests, Makefile, or CI config. Remove or mark unverified commands.
+Spot-check that every shell command in README/AGENTS appears in manifests, Makefile, or CI config. Remove or mark unverified commands.
 
 Show the user:
 - Which files were created vs updated
@@ -184,23 +203,25 @@ Show the user:
 
 **User:** "Just created this Next app, no README yet"
 
-**Action:** `/project-init` → detect `package.json`, `next.config.ts`, `src/app/` → write both files
+**Action:** `/init` → detect `package.json`, `next.config.ts`, `src/app/` → write README + AGENTS + CLAUDE
 
 **README:** install (`npm install`), dev (`npm run dev`), stack table, `src/app/` structure
 
-**CLAUDE:** commands, App Router layout, test command if present, do-not-do (don't edit `.next/`)
+**AGENTS:** commands, App Router layout, test command if present, do-not-do (don't edit `.next/`)
 
-### Example 2 — README exists, CLAUDE missing
+**CLAUDE:** `@AGENTS.md`
 
-**User:** "Add CLAUDE.md for this Go service"
+### Example 2 — README exists, AGENTS missing
 
-**Action:** `/project-init --claude` → read existing README for description → write CLAUDE only
+**User:** "Add AGENTS.md for this Go service"
 
-### Example 3 — Both exist
+**Action:** `/init --agents` → read existing README for description → write AGENTS only; offer CLAUDE import if CLAUDE also missing
 
-**User:** `/project-init`
+### Example 3 — All exist
 
-**Action:** Report both exist → ask whether to enhance specific sections or use `--force`
+**User:** `/init`
+
+**Action:** Report all exist → ask whether to enhance specific sections or use `--force`
 
 ---
 
@@ -210,21 +231,24 @@ Show the user:
 
 2. **Overwriting a hand-written README.** Always read existing files; merge license, badges, deployment sections.
 
-3. **CLAUDE.md bloat.** Move architecture essays to README or a `docs/` file; keep CLAUDE operational.
+3. **AGENTS.md bloat.** Move architecture essays to README or a `docs/` file; keep AGENTS operational.
 
-4. **Guessing stack from one import.** Require manifest or config confirmation before claiming a framework.
+4. **Duplicating AGENTS into CLAUDE.** CLAUDE.md should import `@AGENTS.md`, not copy the body.
 
-5. **Documenting ignored dirs.** Skip `node_modules/`, `.next/`, `dist/` in structure maps.
+5. **Guessing stack from one import.** Require manifest or config confirmation before claiming a framework.
 
-6. **Same content in both files.** README = onboarding for humans; CLAUDE = how to work in the repo as an agent.
+6. **Documenting ignored dirs.** Skip `node_modules/`, `.next/`, `dist/` in structure maps.
+
+7. **Same content in README and AGENTS.** README = onboarding for humans; AGENTS = how to work in the repo as an agent.
 
 ---
 
 ## Verification Checklist
 
-- [ ] Checked which of README.md / CLAUDE.md were missing before writing
+- [ ] Checked which of README.md / AGENTS.md / CLAUDE.md were missing before writing
 - [ ] Ran `detect_project.py` or equivalent recon
 - [ ] Every command in generated docs exists in the repo
-- [ ] CLAUDE.md ≤ 100 lines
+- [ ] AGENTS.md ≤ 100 lines
+- [ ] CLAUDE.md imports `@AGENTS.md` (no full duplicate body)
 - [ ] No secrets, env values, or machine-specific paths without context
 - [ ] User told what was created and what couldn't be detected
